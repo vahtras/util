@@ -1,5 +1,5 @@
 import os
-from util.unformatted import FortranBinary
+from ..unformatted import FortranBinary
 import numpy as np
 
 def setup():

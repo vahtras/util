@@ -1,4 +1,4 @@
-from util.full import triangular
+from ..full import triangular
 def test_init():
     ft = triangular.init([1.,  0.,  1.])
     assert ft.sshape == (2, 2)

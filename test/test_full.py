@@ -1,5 +1,5 @@
 import numpy as np
-from util.full import matrix
+from ..full import matrix
 
 def assert_(this, ref):
     print this
