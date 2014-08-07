@@ -258,50 +258,38 @@ class matrix(numpy.ndarray):
                other[:,columns[j]]+=self[:,j]
       return
 
-   def pack(self,other,rows=None,columns=None,add=0):
+   def packto(self,other,rows=None,columns=None,add=0):
       #
       # Usage pack copies element into other matrix
       # with indices other[k,columns[l]=self[rows[k],columns[l]
       #
+      other_rdim, other_cdim = other.shape
+      self_rdim, self_cdim = self.shape
       if not add:
          other.clear()
       if rows and columns:
-         assert(other.rdim == len(rows))
-         assert(other.cdim == len(columns))
-         for i in range(other.rdim):
-            for j in range(other.cdim):
+         assert(other_rdim == len(rows))
+         assert(other_cdim == len(columns))
+         for i in range(other_rdim):
+            for j in range(other_cdim):
                   other[i,j]+=self[rows[i],columns[j]]
       else:
          if rows:
-            assert(self.rdim == len(rows))
-            for i in range(self.rdim):
+            assert(other_rdim == len(rows))
+            for i in range(other_rdim):
                other[i,:]+=self[rows[i],:]
          if columns:
-            assert(self.cdim == len(columns))
-            for j in range(self.cdim):
+            assert(other_cdim == len(columns))
+            for j in range(other_cdim):
                other[:,j]+=self[:,columns[j]]
       return
 
-   def __sob__(self,other):
-      return self + (-other)
-#  def __pos__(self):
-#     new=self.__class__(self.rdim,self.cdim)
-#     new=+self
-      return new
-
-   def __nog__(self):
-      new=self.__class__(self.rdim,self.cdim)
-      new=-self
-      return new
 
    def __and__(self,other):
-      if len(self.shape) == 1:
-         return (self.T*other)
-      else:
-         return self.ravel(self.order)*other.ravel(other.order)
+     return numpy.dot(self.ravel(self.order), other.ravel(other.order))
 
    def __xor__(self,other):
-      return self*other-other*self
+      return self*other - other*self
 
    def inv(self):
       if self._I is None:
@@ -310,14 +298,17 @@ class matrix(numpy.ndarray):
          self._I=unit(r)/self
       return self._I
    I = property(fget=inv)
+
    def __rdiv__(self,other):
       r,c=self.shape
       return unit(r,other)/self
+
    def tr(self):
       return self.trace()
 
    def det(self):
       return numpy.linalg.det(self)
+
    def minor(self,i,j):
       r,c=self.shape
       rows=range(r)
@@ -328,9 +319,7 @@ class matrix(numpy.ndarray):
       #print self[rows,cols]
       # do rows and cols separately
       redr=self[rows,:]
-      #print 'redr',redr
       redc=redr[:,cols]
-      #print 'redc',redc
       return redc
 
    def cofactor(self):
@@ -341,6 +330,7 @@ class matrix(numpy.ndarray):
          for j in range(c):
             new[i,j]=(-1)**(i+j)*self.minor(i,j).det()
       return new
+
    def eig(self):
       """
       Return sorted eigenvalues as a column matrix
@@ -349,6 +339,7 @@ class matrix(numpy.ndarray):
       eigvals=numpy.linalg.eigvals(self)
       p=eigvals.argsort()
       return eigvals[p].view(matrix)
+
    def eigvec(self):
       """
       Return eigenvalue/eigenvector pair, sorted
@@ -361,6 +352,7 @@ class matrix(numpy.ndarray):
       # Note that eig returns U as ndarray but V as its subclass
       #
       return U[p].view(matrix),V[:,p]
+
    def qr(self):
       """
       Return eigenvalue/eigenvector pair, sorted
@@ -688,7 +680,7 @@ class triangular(numpy.ndarray):
          retstr+="\n"
       return retstr
    def __getitem__(self,args):
-      #print "__getitem__",args
+      print "__getitem__",args
       vec=self.view(matrix)
       i,j=args
       if self.anti and i < j:
