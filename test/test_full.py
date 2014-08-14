@@ -1,5 +1,6 @@
 import unittest
 import numpy as np
+from math import sqrt, cos, exp, pi
 from ..full import matrix, init
 
 class TestMatrix(unittest.TestCase):
@@ -165,8 +166,147 @@ class TestMatrix(unittest.TestCase):
     def test_cofactor(self):
         M = init([[4, 1], [1, 3]])
         np.testing.assert_almost_equal(M.cofactor(), [[3., -1.], [-1., 4.]])
+
+    def test_eig(self):
+        M = init([[0, 1], [1, 0]])
+        np.testing.assert_almost_equal(M.eig(), [-1., 1.])
+
+    def test_eigvec(self):
+        M = init([[0, 1], [1, 0]])
+        np.testing.assert_almost_equal(sqrt(2)*M.eigvec()[1], [[-1., 1.],[1,1]])
+
+    def test_qr_Q(self):
+        A = init([[12, 6, -4], [-51, 167, 24], [4, -68, -41]])
+        Q, R = A.qr()
+        np.testing.assert_almost_equal(Q, 
+            -init([[6./7, 3./7, -2./7], [-69./175, 158./175, 6./35], [-58./175, 6./175, -33./35]])
+            )
+    def test_qr_R(self):
+        A = init([[12, 6, -4], [-51, 167, 24], [4, -68, -41]])
+        Q, R = A.qr()
+        np.testing.assert_almost_equal(R, 
+            -init([[14, 0, 0], [21, 175, 0], [-14, -70, 35]])
+            )
+        np.testing.assert_almost_equal(A, Q*R)
+
+    def test_normalize(self):
+        v = init([1.0, 1.0])
+        v.normalize()
+        np.testing.assert_almost_equal(v, [sqrt(0.5), sqrt(0.5)])
+
+    def test_normalize_with_overlap(self):
+        v = init([1.0, 1.0])
+        S = init([[1.0, 0.5], [0.5, 1.0]])
+        v.normalize(S)
+        np.testing.assert_almost_equal(v, [sqrt(1.0/3), sqrt(1.0/3)])
+
+    def test_gram_schmidt(self):
+        Delta = 0.1
+        S = init([[1.0, Delta], [Delta, 1.0]])
+        v = init([[1.0, 0.0], [0.0, 1.0]])
+        u = v.GS(S)
+        u_ref = init([[1.0, 0.0], [-Delta/sqrt(1-Delta**2), 1.0/sqrt(1-Delta**2)]])
+        np.testing.assert_almost_equal(u, u_ref)
+
+    def test_gram_schmidt_as_transformation(self):
+        Delta = 0.1
+        S = init([[1.0, Delta], [Delta, 1.0]])
+        v = init([[1.0, 0.0], [0.0, 1.0]])
+        T = v.GST(S)
+        u = v*T
+        u_ref = init([[1.0, 0.0], [-Delta/sqrt(1-Delta**2), 1.0/sqrt(1-Delta**2)]])
+        np.testing.assert_almost_equal(u, u_ref)
+        
+    def test_sqrt(self):
+        Delta = 0.1
+        S = init([[1.0, Delta], [Delta, 1.0]])
+        Sh = S.sqrt()
+        np.testing.assert_almost_equal(Sh*Sh, S)
+
+    def test_sqrtinv(self):
+        Delta = 0.1
+        S = init([[1.0, Delta], [Delta, 1.0]])
+        Sih = S.invsqrt()
+        np.testing.assert_almost_equal(Sih*Sih, S.I)
+
+    def test_funcsqrt(self):
+        Delta = 0.1
+        S = init([[1.0, Delta], [Delta, 1.0]])
+        Sh = S.func(sqrt)
+        np.testing.assert_almost_equal(Sh*Sh, S)
+
+    def test_exp(self):
+        Delta = 0.1
+        k = init([[Delta, 0.0], [0.0, -Delta]])
+        exp_k = init([[exp(Delta), 0.0], [0.0, exp(-Delta)]])
+        np.testing.assert_almost_equal(k.exp(), exp_k)
+
+    def test_sym(self):
+        A = init([[1, 2], [3, 4]])
+        np.testing.assert_almost_equal(A.sym(), [[1, 2.5], [2.5, 4]])
+
+    def test_asym(self):
+        A = init([[1, 2], [3, 4]])
+        np.testing.assert_almost_equal(A.antisym(), [[0, 0.5], [-0.5, 0]])
+
+    def test_pack(self):
+        from ..full import triangular
+        A = init([[1, 2], [3, 4]])
+        B = triangular.init([1, 2.5, 4])
+        np.testing.assert_almost_equal(A.pack(), B)
+
+    def test_lower(self):
+        from ..full import triangular
+        A = init([[1, 2], [3, 4]])
+        B = triangular.init([1, 2, 4])
+        np.testing.assert_almost_equal(A.lower(), B)
+
+    def test_fold(self):
+        from ..full import triangular
+        A = init([[1, 2], [3, 4]])
+        B = triangular.init([1, sqrt(2)*2, 4]) #???
+        np.testing.assert_almost_equal(A.fold(), B)
+
+    def test_norm2(self):
+        A = init([3, 4])
+        self.assertAlmostEqual(A.norm2(), 5.0) 
+
+    def test_block(self):
+        A = init([[1, 2], [3, 4]])
+        B = A.block([1, 1], [1, 1])
+        self.assertEqual(B.subblock[0], [1])
+        self.assertEqual(B.subblock[1], [4])
+
+    def test_subblocked(self):
+        A = init([[1, 2], [3, 4]])
+        B = A.subblocked([1, 1], [1, 1])
+        self.assertEqual(B.subblock[0][1], [3])
+        self.assertEqual(B.subblock[1][0], [2])
+
+    def test_clear(self):
+        A = init([[1, 2], [3, 4]])
+        A.clear()
+        np.testing.assert_equal(A, [[0, 0], [0, 0]])
+
+    def test_cross(self):
+        A = init([1, 2, 3])
+        np.testing.assert_equal(A.cross(), [[0, -3, 2], [3, 0, -1], [-2, 1, 0]])
+
+    def test_dist(self):
+        A = init([0, 0, 1])
+        np.testing.assert_almost_equal(A. dist([0, 1, 0]), sqrt(2))
+
+    def test_angle3(self):
+        pass
     
-        
+    def test_angle3d(self):
+        pass
+
+    def test_angle(self):
+        A = init([0, 0, 1])
+        B = init([0, 1, 0])
+        np.testing.assert_almost_equal(A.angle(B), pi/2)
         
 
-
+if __name__ == "__main__":
+    unittest.main()

@@ -391,12 +391,6 @@ class matrix(numpy.ndarray):
    def GST(self,S):
       return self.GS(S,T=True)
          
-
-   def lowdin(self,S):
-      invsq=lambda x: 1.0/math.sqrt(x)
-      Si12=scipy.linalg.sqrtm(S.I)
-      return
-
    def sqrt(self):
       from scipy.linalg import sqrtm
       return sqrtm(self).real.view(matrix)
@@ -471,17 +465,18 @@ class matrix(numpy.ndarray):
             _t[i,j]=.5*(self[i,j]+fac*self[j,i])
       return _t
    def lower(self):
-      assert self.cdim == self.rdim
+      r, c = self.shape
+      assert r == c
       _t=triangular(self.shape)
-      r,c=self.shape
       for i in range(r):
          for j in range(i+1):
             _t[i,j]=self[i,j]
       return _t
    def fold(self):
-      assert self.cdim == self.rdim
-      _t=triangular(self.cdim)
-      for i in range(self.cdim):
+      r, c = self.shape
+      assert r == c
+      _t=triangular(self.shape)
+      for i in range(c):
          for j in range(i):
             _t[i,j]=math.sqrt(2)*self[i,j]
          _t[i,i]=self[i,i]
@@ -663,6 +658,7 @@ class triangular(numpy.ndarray):
       # should test for valid n
       new = triangular((n, n))
       ij = 0
+
       for i in range(n):
          for j in range(i+1):
              new[i, j] = arr[ij]
@@ -680,7 +676,7 @@ class triangular(numpy.ndarray):
          retstr+="\n"
       return retstr
    def __getitem__(self,args):
-      print "__getitem__",args
+      #print "__getitem__",args
       vec=self.view(matrix)
       i,j=args
       if self.anti and i < j:
