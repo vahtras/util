@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from math import sqrt, cos, exp, pi
-from ..full import matrix, init
+from ..full import matrix, init, unit, permute
 
 class TestMatrix(unittest.TestCase):
 
@@ -306,7 +306,41 @@ class TestMatrix(unittest.TestCase):
         A = init([0, 0, 1])
         B = init([0, 1, 0])
         np.testing.assert_almost_equal(A.angle(B), pi/2)
-        
+
+    def test_dihedral_open(self):
+        A = init([1, 1, 0])
+        B = init([1, 0, 0])
+        C = init([0, 0, 0])
+        D = init([0, -1, 0])
+        np.testing.assert_equal(A.dihedral(B, C, D), pi)
+
+    def test_dihedral_eclipsed(self):
+        A = init([1, 1, 0])
+        B = init([1, 0, 0])
+        C = init([0, 0, 0])
+        D = init([0, 1, 0])
+        np.testing.assert_equal(A.dihedral(B, C, D), 0)
+
+    def test_svd(self):
+        A = init([[1, 1, sqrt(3)], [-1, -1, 0]])
+        u, s, v = A.svd()
+        np.testing.assert_almost_equal(A, u*s*v.T)
+
+    def test_unit(self):
+        I = init([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        np.testing.assert_almost_equal(unit(3), I)
+
+    def test_unit2(self):
+        I = init([[2, 0, 0], [0, 2, 0], [0, 0, 2]])
+        np.testing.assert_almost_equal(unit(3, factor=2), I)
+
+    def test_permute(self):
+        np.testing.assert_equal(permute([0, 2], 4), 
+            [[1, 0, 0, 0],
+             [0, 0, 1, 0],
+             [0, 1, 0, 0],
+             [0, 0, 0, 1],])
+
 
 if __name__ == "__main__":
     unittest.main()

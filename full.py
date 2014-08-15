@@ -585,16 +585,9 @@ class matrix(numpy.ndarray):
          n2*b1&b2xb3,
          b1xb2&b2xb3
          )
+
    def dihedrald(self,r3,r2,r1):
       return self.dihedral(r3,r2,r1)*180/math.pi
-   def __or__(self,other):
-      assert self.rdim == other.rdim
-      assert self.cdim == other.cdim
-      c=matrix((self.rdim,self.cdim))
-      for i in range(self.rdim):
-         for j  in range(self.cdim):
-            c[i,j]=self[i,j]*other[i,j]
-      return c
 
    def svd(self):
       """Compact singular value decomposition
@@ -731,6 +724,7 @@ def header(str):
    %s
    %s
    """%(str,len(str)*'-')
+
 if __name__ == "__main__":
    #
    # init
