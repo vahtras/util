@@ -1,18 +1,18 @@
 """Matrix utility module based on numpy"""
 
-import math, sys
+import math
 import numpy
 
 class matrix(numpy.ndarray):
     """ A subclass of numpy.ndarray for matrix syntax and better printing """
-    fmt="%14.8f"
-    order='F'
+    fmt = "%14.8f"
+    order = 'F'
 
-    def __new__(subtype, shape, order=order, fmt=None):
+    def __new__(cls, shape, fmt=None):
         """Constructor ..."""            
-        obj = numpy.zeros(shape, order=matrix.order).view(subtype)
+        obj = numpy.zeros(shape, order=cls.order).view(cls)
         if fmt is None:
-            obj.fmt = matrix.fmt
+            obj.fmt = cls.fmt
         return obj
 
     def __array_finalize__(self, obj):
@@ -44,95 +44,96 @@ class matrix(numpy.ndarray):
         """
      
         #self.debug()
-        retstr='\n %s \n'%str(self.shape)
+        retstr = '\n %s \n' % str(self.shape)
         if len(self.shape) == 1:
-            r=self.shape[0]
+            r = self.shape[0]
             #retstr+="(%d)\n"%(r)
             if 0:
                 pass
             else:
-                columnsperblock=1
-                fullblocks=1
-                trailblock=0
+                columnsperblock = 1
+                fullblocks = 1
+                trailblock = 0
                 for b in range(fullblocks):
-                    crange=range(b*columnsperblock,(b+1)*columnsperblock)
-                    retstr+=" "*10
-                    for j in crange:retstr+="    Column%4d"%(j+1)
-                    retstr+='\n'
+                    crange = range(b*columnsperblock,(b+1)*columnsperblock)
+                    retstr += " "*10
+                    for j in crange:
+                        retstr += "    Column%4d" % (j+1)
+                    retstr += '\n'
                     for i in range(r):
-                        rownorm=math.fabs(self[i])
+                        rownorm = math.fabs(self[i])
                         if rownorm > 1e-8:
-                            retstr+="%8d  "%(i+1)
-                            retstr=retstr + self.fmt % self[i]
-                            retstr+='\n'
-                    retstr+='\n'
+                            retstr += "%8d  " % (i+1)
+                            retstr = retstr + self.fmt % self[i]
+                            retstr += '\n'
+                    retstr += '\n'
         elif len(self.shape) == 2:
-            r, c=self.shape
+            r, c = self.shape
             #retstr+="(%d,%d)\n"%(r, c)
             if 0:
                 pass
             else:
-                columnsperblock=5
-                fullblocks=c/columnsperblock
-                trailblock=c%5
+                columnsperblock = 5
+                fullblocks = c/columnsperblock
+                trailblock = c % 5
                 for b in range(fullblocks):
-                    crange=range(b*columnsperblock,(b+1)*columnsperblock)
-                    retstr+=" "*10
-                    for j in crange:retstr+="    Column%4d"%(j+1)
-                    retstr+='\n'
+                    crange = range(b*columnsperblock,(b+1)*columnsperblock)
+                    retstr += " "*10
+                    for j in crange:
+                        retstr += "    Column%4d" % (j+1)
+                    retstr += '\n'
                     for i in range(r):
-                        rownorm=self[i, crange].norm2()
+                        rownorm = self[i, crange].norm2()
                         if rownorm > 1e-8:
-                            retstr+="%8d  "%(i+1)
+                            retstr += "%8d  " % (i+1)
                             for j in crange:
-                                retstr=retstr + self.fmt % self[i, j]
-                            retstr+='\n'
-                    retstr+='\n'
-                crange=range(fullblocks*columnsperblock, c)
+                                retstr = retstr + self.fmt % self[i, j]
+                            retstr += '\n'
+                    retstr += '\n'
+                crange = range(fullblocks*columnsperblock, c)
                 if trailblock:
-                    retstr+=" "*10
-                    for j in crange:retstr+="    Column%4d"%(j+1)
-                    retstr+='\n'
+                    retstr += " "*10
+                    for j in crange:
+                        retstr += "    Column%4d" % (j+1)
+                    retstr += '\n'
                     for i in range(r):
-                        rownorm=self[i, crange].norm2()
+                        rownorm = self[i, crange].norm2()
                         if rownorm > 1e-8:
-                            retstr+="%8d  "%(i+1)
+                            retstr += "%8d  " % (i+1)
                             for j in crange:
-                                retstr=retstr + self.fmt % self[i, j]
-                            retstr=retstr+'\n'
+                                retstr += self.fmt % self[i, j]
+                            retstr += '\n'
         elif len(self.shape) > 2:
-            r, c=self.shape[:2]
-            hishape=self.shape[2:]
-            losize=r*c
+            r, c = self.shape[:2]
+            hishape = self.shape[2:]
+            losize = r*c
             if losize == 0:
                 return "\nZero dimension\n"
-            hisize=self.size/losize
-            altshape=(r, c, hisize)
+            hisize = self.size/losize
+            altshape = (r, c, hisize)
             #print altshape
-            alt=self.reshape(altshape, order=matrix.order)
+            alt = self.reshape(altshape, order=matrix.order)
             #
             # Given linear index n find tuple idx=(i0,i1,i2...) 
             # for actual shape hishape=(n0,n1,n2..)
             #
             for n in range(hisize):
-                k=n
-                idx=[]
-                for i in range(len(hishape),1,-1):
+                k = n
+                idx = []
+                for i in range(len(hishape), 1, -1):
                     #
                     # integer divide by n0*...n(i-2), save remainder
                     #
-                    dp=numpy.asarray(hishape[:i-1]).prod()
+                    dp = numpy.asarray(hishape[:i-1]).prod()
                     idx.append(k/dp)
                     #print "idx", idx
-                    k=k%dp
+                    k = k % dp
                 idx.append(k)
                 idx.reverse()
              
-                retstr+=str(idx) + str(alt[:, :, n])
+                retstr += str(idx) + str(alt[:, :, n])
         elif len(self.shape) == 0: #returned by numpy.max
-            return self.fmt%self.sum()
-           
-     
+            return self.fmt % self.sum()
         return retstr
 
     def __mul__(self, other):
@@ -203,10 +204,8 @@ class matrix(numpy.ndarray):
         <BLANKLINE>
         """
      
-        a=self.flatten(matrix.order)
-        b=other.flatten(matrix.order)
-        c=numpy.outer(self, other).reshape(self.shape+other.shape).view(matrix)
-        return c
+        c = numpy.outer(self, other).reshape(self.shape+other.shape)
+        return c.view(matrix)
      
     def __div__(self, other):
         """Solution of linear equation/inversion
@@ -221,49 +220,46 @@ class matrix(numpy.ndarray):
         """
      
         if isinstance(other, self.__class__):
-            new=numpy.linalg.solve(other, self)
+            new = numpy.linalg.solve(other, self)
         else:
-            new=(1.0/other)*self
+            new = (1.0/other)*self
         return new
 
     def scatteradd(self, other, rows=None, columns=None):
+        """ See scatter"""
         self.scatter(other, rows, columns, add=1)
 
     def scatter(self, other, rows=None, columns=None, add=0):
-        #
-        # Usage scatter copies element into other matrix
-        # with indices other[rows[k],columns[l]]=self[k,l]
-        #
-        #print "scatter:self,ind,n",self,ind,n
-        #print self.cdim
-        #print len(ind)
+        """
+        Usage: scatter copies element into other matrix
+        with indices other[rows[k],columns[l]]=self[k, l]
+        """
         if not add:
             other.clear()
-        r, c=self.shape
+        r, c = self.shape
         if rows and columns:
             assert(r == len(rows))
             assert(c == len(columns))
             for i in range(r):
                 for j in range(c):
-                    other[rows[i], columns[j]]+=self[i, j]
+                    other[rows[i], columns[j]] += self[i, j]
         else:
             if rows:
                 assert(r == len(rows))
                 for i in range(r):
-                    other[rows[i],:]+=self[i,:]
+                    other[rows[i], :] += self[i, :]
             if columns:
                 assert(c == len(columns))
                 for j in range(c):
-                    other[:, columns[j]]+=self[:, j]
+                    other[:, columns[j]] += self[:, j]
         return
 
     def packto(self, other, rows=None, columns=None, add=0):
-        #
-        # Usage pack copies element into other matrix
-        # with indices other[k, columns[l]=self[rows[k], columns[l]
-        #
+        """
+        Usage pack copies element into other matrix
+        with indices other[k, columns[l]=self[rows[k], columns[l]
+        """
         other_rdim, other_cdim = other.shape
-        self_rdim, self_cdim = self.shape
         if not add:
             other.clear()
         if rows and columns:
@@ -271,71 +267,80 @@ class matrix(numpy.ndarray):
             assert(other_cdim == len(columns))
             for i in range(other_rdim):
                 for j in range(other_cdim):
-                    other[i, j]+=self[rows[i], columns[j]]
+                    other[i, j] += self[rows[i], columns[j]]
         else:
             if rows:
                 assert(other_rdim == len(rows))
                 for i in range(other_rdim):
-                    other[i,:]+=self[rows[i],:]
+                    other[i, :] += self[rows[i], :]
             if columns:
                 assert(other_cdim == len(columns))
                 for j in range(other_cdim):
-                    other[:, j]+=self[:, columns[j]]
+                    other[:, j] += self[:, columns[j]]
         return
 
 
     def __and__(self, other):
+        """Shortcut for sum(ij) A_{ij} B_{ij}"""
         return numpy.dot(self.ravel(self.order), other.ravel(other.order))
 
     def __xor__(self, other):
+        """Commutator [A, B]"""
         return self*other - other*self
 
+    #@property
     def inv(self):
+        """Matrix inverse"""
         if self._I is None:
-            r, c=self.shape
+            r, c = self.shape
             assert r == c
-            self._I=unit(r)/self
+            self._I = unit(r)/self
         return self._I
     I = property(fget=inv)
 
     def __rdiv__(self, other):
-        r, c=self.shape
+        """Division with Matrix instance in denominator"""
+        r, _ = self.shape
         return unit(r, other)/self
 
     def tr(self):
+        """Trace"""
         return self.trace()
 
     def det(self):
+        """Return determinant"""
         return numpy.linalg.det(self)
 
     def minor(self, i, j):
-        r, c=self.shape
-        rows=range(r)
-        cols=range(c)
+        """Matrix minor"""
+        r, c = self.shape
+        rows = range(r)
+        cols = range(c)
         rows.remove(i)
         cols.remove(j)
         # bug
         #print self[rows, cols]
         # do rows and cols separately
-        redr=self[rows, :]
-        redc=redr[:, cols]
+        redr = self[rows, :]
+        redc = redr[:, cols]
         return redc
 
     def cofactor(self):
-        r, c=self.shape
+        """Co-factor matrix"""
+        r, c = self.shape
         assert(r == c)
-        new=matrix((r, c))
+        new = matrix((r, c))
         for i in range(r):
             for j in range(c):
-                new[i, j]=(-1)**(i+j)*self.minor(i, j).det()
+                new[i, j] = (-1)**(i+j)*self.minor(i, j).det()
         return new
 
     def eig(self):
         """
         Return sorted eigenvalues as a column matrix
         """
-        eigvals=numpy.linalg.eigvals(self)
-        p=eigvals.argsort()
+        eigvals = numpy.linalg.eigvals(self)
+        p = eigvals.argsort()
         return eigvals[p].view(matrix)
 
     def eigvec(self):
@@ -343,37 +348,38 @@ class matrix(numpy.ndarray):
         Return eigenvalue/eigenvector pair, sorted
         by eigenvalue
         """
-        U,V=numpy.linalg.eig(self)
-        p=U.argsort()
+        U, V = numpy.linalg.eig(self)
+        p = U.argsort()
         #
         # Note that eig returns U as ndarray but V as its subclass
         #
-        return U[p].view(matrix),V[:, p]
+        return U[p].view(matrix), V[:, p]
 
     def qr(self):
         """
         Return eigenvalue/eigenvector pair, sorted
         by eigenvalue
         """
-        Q,R=numpy.linalg.qr(self)
-        #
-        # Note that eig returns U as ndarray but V as its subclass
-        #
-        return Q,R
-    def normalize(self,S=None):
+        Q, R = numpy.linalg.qr(self)
+        return Q, R
+
+    def normalize(self, S=None):
+        """Normalizing myself"""
         if S is None:
-            norm=1/math.sqrt(self&self)
+            norm = 1/math.sqrt(self&self)
         else:
-            norm=1/math.sqrt(self&(S*self))
-        self*=norm
-    def GS(self,S,T=False):
-        r, c=self.shape
-        new=matrix((r, c))
-        new[:,0]=self[:,0]
-        new[:,0].normalize(S)
+            norm = 1/math.sqrt(self&(S*self))
+        self *= norm
+
+    def GS(self, S, T=False):
+        """Gram-Schmidt orthonormalization"""
+        r, c = self.shape
+        new = matrix((r, c))
+        new[:, 0] = self[:, 0]
+        new[:, 0].normalize(S)
         for i in range(1, c):
-            P=new[:,:i]*new[:,:i].T*S
-            new[:, i]=self[:, i]-P*self[:, i]
+            P = new[:, :i]*new[:, :i].T*S
+            new[:, i] = self[:, i] - P*self[:, i]
             new[:, i].normalize(S)
         #
         # relation new=self*T
@@ -385,134 +391,153 @@ class matrix(numpy.ndarray):
         else:
             return new
 
-    def GST(self,S):
-        return self.GS(S,T=True)
+    def GST(self, S):
+        """Gram-Schmidt orthonormalization, return transformation matrix"""
+        return self.GS(S, T=True)
           
     def sqrt(self):
+        """Return square root of matrix"""
         from scipy.linalg import sqrtm
         return sqrtm(self).real.view(matrix)
 
     def invsqrt(self):
+        """Return inverse square root of matrix"""
         from scipy.linalg import sqrtm
         return sqrtm(self.I).real.view(matrix)
 
     @staticmethod
     def diag(vec):
+        """Make diagonal matrix from vector"""
         return numpy.diag(vec).view(matrix)
 
     def func(self, f):
+        """General function of matrix"""
         if False:
             import scipy.linalg
             return scipy.linalg.funm(self, f)
         else:
-            val, vec=numpy.linalg.eig(self)
-            fval=val.view(matrix)
-            n=len(val)
-            new=matrix((n, n))
+            val, vec = numpy.linalg.eig(self)
+            fval = val.view(matrix)
+            n = len(val)
+            new = matrix((n, n))
             for i in range(n):
-                fval[i]=f(val[i])
-                new[i, i]=fval[i]
+                fval[i] = f(val[i])
+                new[i, i] = fval[i]
             return vec*new*vec.inv()
+
+
     def exp(self):
-        r, c=self.shape
-        new=unit(r)
-        termnorm=new&new
-        term=new*1
-        i=0
+        """Exponential of matrix"""
+        r, _ = self.shape
+        new = unit(r)
+        termnorm = new&new
+        term = new*1
+        i = 0
         while (termnorm > 1e-8):
-            i=i+1
-            term*=self/i
-            new+=term
-            termnorm=math.sqrt(term&term)
+            i = i+1
+            term *= self/i
+            new += term
+            termnorm = math.sqrt(term&term)
         return new
            
     def random(self):
-        if 0:
-            import random
-            for i in range(self.size):
-                self.flat[i] = random.random()
-        else:
-            self.flat=numpy.random.random(self.size)
+        """Fill myself with random numbers"""
+        self.flat = numpy.random.random(self.size)
         return self
+
     def sym(self):
         """return symmetrized matrix"""
         return .5*(self + self.T)
+
     def antisym(self):
+        """return anti-symmetrized matrix"""
         return .5*(self - self.T)
+
     def pack(self, anti=False):
+        """Pack to triangular"""
         #raise Exception("test")
-        r, c=self.shape
+        r, c = self.shape
         assert r == c
-        _t=triangular(self.shape)
-        fac=1
-        if anti is True: fac=-1
+        _t = triangular(self.shape)
+        fac = 1
+        if anti: 
+            fac = -1
         for i in range(r):
             for j in range(i+1):
-                _t[i, j]=.5*(self[i, j]+fac*self[j, i])
+                _t[i, j] = .5*(self[i, j] + fac*self[j, i])
         return _t
 
     def lower(self):
+        """Return lower triangular"""
         r, c = self.shape
         assert r == c
-        _t=triangular(self.shape)
+        _t = triangular(self.shape)
         for i in range(r):
             for j in range(i+1):
-                _t[i, j]=self[i, j]
+                _t[i, j] = self[i, j]
         return _t
 
     def fold(self):
+        """Return 'folded' matrix"""
         r, c = self.shape
         assert r == c
-        _t=triangular(self.shape)
+        _t = triangular(self.shape)
         for i in range(c):
             for j in range(i):
-                _t[i, j]=math.sqrt(2)*self[i, j]
-            _t[i, i]=self[i, i]
+                _t[i, j] = math.sqrt(2)*self[i, j]
+            _t[i, i] = self[i, i]
         return _t
 
     def norm2(self):
+        """Euclidean norm"""
         return numpy.linalg.norm(self)
 
     def block(self, rdim, cdim):
+        """Return blocked version of matrix
+        Only diagonal blocks defined by input dimensions are considered
+        """
         assert len(rdim) == len(cdim)
         import blocked
-        new=blocked.matrix(rdim, cdim)
-        rstart=0
-        cstart=0
+        new = blocked.matrix(rdim, cdim)
+        rstart = 0
+        cstart = 0
         for i in range(len(rdim)):
-            new.subblock[i]=self[rstart:rstart+rdim[i], cstart:cstart+cdim[i]]
-            rstart+=rdim[i]
-            cstart+=cdim[i]
+            new.subblock[i] = self[rstart:rstart+rdim[i], cstart:cstart+cdim[i]]
+            rstart += rdim[i]
+            cstart += cdim[i]
         return new
 
     def subblocked(self, rdim, cdim):
+        """Return fully blocked version of matrix
+        """
         import subblocked
-        new=subblocked.matrix(rdim, cdim)
-        rstart=0
+        new = subblocked.matrix(rdim, cdim)
+        rstart = 0
         for i in range(new.rowblocks):
-            cstart=0
+            cstart = 0
             for j in range(new.colblocks):
                 new.subblock[i][j] = \
                     self[rstart:rstart+rdim[i], cstart:cstart+cdim[j]]
-                cstart+=cdim[j]
-            rstart+=rdim[i]
+                cstart += cdim[j]
+            rstart += rdim[i]
         return new
 
     def clear(self):
-        self*=0.0
+        """Zero myself"""
+        self *= 0.0
 
     def cross(self, *args):
         """ With out argument return 3x3 matrix Ax, 
             with a vector return ordinary cross product AxB"""
         assert self.shape == (3,)
         if not args:
-            new=matrix((3,3))
-            new[0,1]=-self[2]
-            new[1,0]=self[2]
-            new[0,2]=self[1]
-            new[2,0]=-self[1]
-            new[1,2]=-self[0]
-            new[2,1]=self[0]
+            new = matrix((3, 3))
+            new[0, 1] = -self[2]
+            new[1, 0] = self[2]
+            new[0, 2] = self[1]
+            new[2, 0] = -self[1]
+            new[1, 2] = -self[0]
+            new[2, 1] = self[0]
             return new
         else:
             c = matrix(3)
@@ -524,36 +549,45 @@ class matrix(numpy.ndarray):
             return c
 
     def dist(self, other):
-        return (self-other).norm2()
+        """Distance between two points"""
+        return (self - other).norm2()
  
-    def angle3(self,B,C):
-        return (self-B).angle(C-B)
-    def angle3d(self,B,C):
-        return (self-B).angle(C-B)*180/math.pi
+    def angle3(self, B, C):
+        """Return A-B-C angle"""
+        return (self - B).angle(C-B)
+
+    def angle3d(self,  B, C):
+        """Return A-B-C angle in degrees"""
+        return (self - B).angle(C - B)*180/math.pi
+
     def angle(self, other):
-        dot=self&other
-        cos2a=dot*dot/((self&self)*(other&other))
+        """Return A-O-B angle, O origin"""
+        dot = self & other
+        cos2a = dot*dot/((self&self)*(other&other))
         if (cos2a > 1):
-            if cos2a-1>1e-14:
+            if cos2a-1 > 1e-14:
                 print "angle:self", self
                 print "angle:other", other
                 print "angle:dot", dot
-                print "angle:cos2a=1+%20.14e"%(cos2a-1)
+                print "angle:cos2a=1+%20.14e" % (cos2a - 1)
                 raise ValueError
             else:
                 #print "full.matrix.angle:
                 #cosa reset to 1 due to numerical roundoff error"
                 cos2a = 1
         if dot > 0:
-            cosa=math.sqrt(cos2a)
+            cosa = math.sqrt(cos2a)
         else:
-            cosa=-math.sqrt(cos2a)
+            cosa = -math.sqrt(cos2a)
         return math.acos(cosa)
 
     def angled(self, other):
+        """Return A-O-B angle in degrees, O origin"""
         return self.angle(other)*180/math.pi
 
     def rot(self, angle, vec, origin=None):
+        """Rotate self by an angle around vec"""
+
         p = vec[:]/vec.norm2()
         if origin is None:
             so = self
@@ -570,18 +604,20 @@ class matrix(numpy.ndarray):
         return self
 
     def dihedral(self, r3, r2, r1):
-        b3=self-r3
-        b2=r3-r2
-        b1=r2-r1
-        b1xb2=b1.cross()*b2
-        b2xb3=b2.cross()*b3
-        n2=b2.norm2()
+        """Return dihedral angle A-B-C-D"""
+        b3 = self-r3
+        b2 = r3-r2
+        b1 = r2-r1
+        b1xb2 = b1.cross()*b2
+        b2xb3 = b2.cross()*b3
+        n2 = b2.norm2()
         return math.atan2(
             n2*b1&b2xb3,
             b1xb2&b2xb3
             )
 
     def dihedrald(self, r3, r2, r1):
+        """Return dihedral angle A-B-C-D in degrees"""
         return self.dihedral(r3, r2, r1)*180/math.pi
 
     def svd(self):
@@ -591,8 +627,8 @@ class matrix(numpy.ndarray):
                s(p, p)
                v(p, p)
         """
-        u, s, vt=numpy.linalg.svd(self, full_matrices=0)
-        s=numpy.diag(s).view(matrix)
+        u, s, vt = numpy.linalg.svd(self, full_matrices=0)
+        s = numpy.diag(s).view(matrix)
         return  u, s, vt.T
 
     def sum(self, **kwargs):
@@ -602,48 +638,53 @@ class matrix(numpy.ndarray):
         return numpy.sum(self.view(numpy.ndarray), **kwargs)
 
 def unit(n, factor=1):
-    vec=matrix((n*n,))
-    vec[:n*n:n+1]=factor
+    """Return unit matrix, optionally scaled"""
+    vec = matrix((n*n,))
+    vec[:n*n:n+1] = factor
     return vec.reshape((n, n))
 
 def permute(select, n):
-    complement=range(n)
+    """Return permutation matrix based on input"""
+    complement = range(n)
     for i in range(n):
         if i in select:
             complement.remove(i)
-    permlist=select+complement
-    new=matrix((n, n))
+    permlist = select+complement
+    new = matrix((n, n))
     for i in range(n):
-        new[permlist[i], i]=1
+        new[permlist[i], i] = 1
     return new
 
 def init(nestlist):
+    """Create and initialize matrix object"""
     return numpy.array(nestlist).view(matrix).T
 #
 # init should be generalized with matrix.order, now 'F' assumed -> traspose
 #
 
 class triangular(numpy.ndarray):
-    def __new__(subtype, shape, anti=False, fmt=None):
-        #print "triangular.__new__:", subtype, shape, anti, fmt
-        tshape=((shape[0]*(shape[0]+1))/2,)
-        obj=matrix(tshape).view(subtype)
-        obj.sshape=shape
-        obj.anti=anti
-        if fmt is None: obj.fmt=matrix.fmt
+    """Triangular packed matrix class"""
+
+    def __new__(cls, shape, anti=False, fmt=None):
+        tshape = ((shape[0]*(shape[0]+1))/2,)
+        obj = matrix(tshape).view(cls)
+        obj.sshape = shape
+        obj.anti = anti
+        if fmt is None:
+            obj.fmt = matrix.fmt
         return obj
+
     def __array_finalize__(self, obj):
-        #print "triangular.__array_finalize__:", type(obj)
-        if obj is None: return
-        self.dim=int(math.sqrt(0.25+2*obj.size))
-        #print "dim", self.dim
-        #print "shape", self.shape
-        self.sshape=getattr(obj,'sshape',(self.dim, self.dim))
-        self.anti=getattr(obj,'anti',False)
-        self.fmt=getattr(obj,'fmt', matrix.fmt)
+        if obj is None: 
+            return
+        self.dim = int(math.sqrt(0.25+2*obj.size))
+        self.sshape = getattr(obj, 'sshape', (self.dim, self.dim))
+        self.anti = getattr(obj, 'anti', False)
+        self.fmt = getattr(obj, 'fmt', matrix.fmt)
        
     @staticmethod
     def init(arr):
+        """initialize with array"""
         n = int(round(-0.5 + math.sqrt(0.25+2*len(arr))))
         # should test for valid n
         new = triangular((n, n))
@@ -658,64 +699,69 @@ class triangular(numpy.ndarray):
 
 
     def __str__(self):
-        retstr="\n"
-        r, c=self.sshape
+        """Output triangular matrix (Dalton OUTPAK)"""
+        retstr = "\n"
+        r, _ = self.sshape
         for i in range(r):
             for j in range(i+1):
-                retstr+=self.fmt%(self[i, j])
-            retstr+="\n"
+                retstr += self.fmt % (self[i, j])
+            retstr += "\n"
         return retstr
 
     def __getitem__(self, args):
         #print "__getitem__", args
-        vec=self.view(matrix)
-        i, j=args
+        vec = self.view(matrix)
+        i, j = args
         if self.anti and i < j:
-            ij=j*(j+1)/2+i
+            ij = j*(j+1)/2+i
             return -vec[ij]
         else:
-            ij=i*(i+1)/2+j
+            ij = i*(i+1)/2+j
             return vec[ij]
 
     def __setitem__(self, args, value):
-        vec=self.view(matrix)
-        i, j=args
+        vec = self.view(matrix)
+        i, j = args
         if i < j and self.anti:
-            ij=j*(j+1)/2+i
-            vec[ij]=-value
+            ij = j*(j+1)/2+i
+            vec[ij] = -value
         else:
-            ij=i*(i+1)/2+j
-            vec[ij]=value
+            ij = i*(i+1)/2+j
+            vec[ij] = value
 
     def unpack(self):
-        n=self.sshape[0]
-        new=matrix((n, n))
+        """Unpack from triangular to square"""
+        n = self.sshape[0]
+        new = matrix((n, n))
         try:
             import pdpack
             if self.anti:
-                new=pdpack.daptge(self, new)
+                new = pdpack.daptge(self, new)
             else:
-                new=pdpack.dsptsi(self, new)
+                new = pdpack.dsptsi(self, new)
         except ImportError:
             for i in range(n):
-                new[i, i]=self[i, i]
+                new[i, i] = self[i, i]
                 for j in range(i):
-                    new[i, j]=self[i, j]
+                    new[i, j] = self[i, j]
                     if self.anti:
-                        new[j, i]=-self[i, j]
+                        new[j, i] = -self[i, j]
                     else:
-                        new[j, i]=self[i, j]
+                        new[j, i] = self[i, j]
         return new
 
     def __mul__(self, other):
+        """Multiplication of triangular matrices, return square"""
         if isinstance(other, self.__class__):
             return self.unpack()*other.unpack()
         else:
             return other*self
+
     def random(self):
+        """Triangular random matrix"""
         matrix.random(self)
         if self.anti:
             for i in range(self.sshape[0]):
-                self[i, i]=0
+                self[i, i] = 0
         return self
 
