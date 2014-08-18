@@ -710,7 +710,6 @@ class triangular(matrix):
         return retstr
 
     def __getitem__(self, args):
-        print "__getitem__", args
         vec = self.view(matrix)
         if type(args) == int:
             return vec[args]
