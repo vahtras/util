@@ -662,7 +662,8 @@ def init(nestlist):
 # init should be generalized with matrix.order, now 'F' assumed -> traspose
 #
 
-class triangular(numpy.ndarray):
+#class triangular(numpy.ndarray):
+class triangular(matrix):
     """Triangular packed matrix class"""
 
     def __new__(cls, shape, anti=False, fmt=None):
@@ -709,15 +710,18 @@ class triangular(numpy.ndarray):
         return retstr
 
     def __getitem__(self, args):
-        #print "__getitem__", args
+        print "__getitem__", args
         vec = self.view(matrix)
-        i, j = args
-        if self.anti and i < j:
-            ij = j*(j+1)/2+i
-            return -vec[ij]
+        if type(args) == int:
+            return vec[args]
         else:
-            ij = i*(i+1)/2+j
-            return vec[ij]
+            i, j = args
+            if self.anti and i < j:
+                ij = j*(j+1)/2+i
+                return -vec[ij]
+            else:
+                ij = i*(i+1)/2+j
+                return vec[ij]
 
     def __setitem__(self, args, value):
         vec = self.view(matrix)
