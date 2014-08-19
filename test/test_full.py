@@ -89,7 +89,7 @@ class TestMatrix(unittest.TestCase):
     def test_div_self(self):
         M = matrix((2, 2))
         M[0, 0] = 1; M[0, 1] = 2; M[1, 0] = 3; M[1, 1] = 4
-        np.testing.assert_equal(M/M, [[1.0, 0.0], [0.0, 1.0]])
+        np.testing.assert_almost_equal(M/M, [[1.0, 0.0], [0.0, 1.0]])
 
     def test_neg(self):
         M = matrix((2, 2))
