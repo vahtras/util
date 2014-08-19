@@ -25,12 +25,13 @@ class TestFortranBinary(unittest.TestCase):
         # first record is int 3
         next(fb)
         n = fb.readbuf(1, 'i')[0]
-        assert n == 3
+        self.assertEqual(n, 3)
+
         # first record is float 1. 2. 3.
         next(fb)
         xref = (1., 2., 3.)
         x = fb.readbuf(n, 'd')
-        assert np.allclose(x, xref)
+        np.testing.assert_allclose(x, xref)
 
     def test_2(self):
         """Find and read label
@@ -49,7 +50,7 @@ class TestFortranBinary(unittest.TestCase):
         fb = FortranBinary(ffile)
         rec  = fb.find('LABEL')
 
-        assert rec.data == 'LABEL'
+        self.assertEqual(rec.data, 'LABEL')
 
     def test_2b(self):
         """Handle label not found
@@ -68,53 +69,54 @@ class TestFortranBinary(unittest.TestCase):
         fb = FortranBinary(ffile)
         rec  = fb.find('NOLABEL')
 
-        assert rec is None
+        self.assertEqual(rec, None)
 
-    def test_3(self):
-        """Iteration protocol
+    def test_3a(self):
+        """Integer*8 dimensions
 
-          integer, parameter :: n = 3
-          double precision x(n), y(n)
+          integer*8, parameter :: nx = 3, ny=3
+          double precision x(nx), y(ny)
           x = (/ 1.0D0, 2.0D0, 3.0D0 /)
           y = (/ 5.0D0, 6.0D0, 7.0D0 /)
           open(3, file='fort.3', status='new', form='unformatted')
-          write(1) x
-          write(1) y
-          close(1)
+          write(3) nx, ny
+          write(3) x
+          write(3) y
+          close(3)
           end
+
+        """
+        ffile = os.path.join(self.tdir, 'fort.3')
+        fb = FortranBinary(ffile)
+        # first record is int 3, 3
+        nx, ny = fb.next().read('q', 2)
+        np.testing.assert_allclose((nx, ny), (3, 3))
+
+    def test_3b(self):
+        """Read vecs
+
+          integer, parameter :: nx = 3, ny=3
+          double precision x(nx), y(ny)
+          x = (/ 1.0D0, 2.0D0, 3.0D0 /)
+          y = (/ 5.0D0, 6.0D0, 7.0D0 /)
+          open(3, file='fort.3', status='new', form='unformatted')
+          write(3) nx, ny
+          write(3) x
+          write(3) y
+          close(3)
+          end
+
         """
         ffile = os.path.join(self.tdir, 'fort.3')
         fb = FortranBinary(ffile)
         # first record is int 3
+        fb.next()
         x=[]
         for rec in fb:
             x += list(fb.readbuf(3, 'd'))
         xref = (1., 2., 3.,  5., 6., 7.)
-        print x, xref
-        assert np.allclose(x, xref)
+        np.testing.assert_allclose(x, xref)
 
-    def test_3b(self):
-        """Read from record object
-
-          integer, parameter :: n = 3
-          double precision x(n), y(n)
-          x = (/ 1.0D0, 2.0D0, 3.0D0 /)
-          y = (/ 5.0D0, 6.0D0, 7.0D0 /)
-          open(3, file='fort.3', status='new', form='unformatted')
-          write(1) x
-          write(1) y
-          close(1)
-          end
-        """
-        ffile = os.path.join(self.tdir, 'fort.3')
-        fb = FortranBinary(ffile)
-        # first record is int 3
-        x=[]
-        for rec in fb:
-            x += list(rec.read(3, 'd'))
-        xref = (1., 2., 3.,  5., 6., 7.)
-        print x, xref
-        assert np.allclose(x, xref)
 
 if __name__ == "__main__":
     unittest.main()
