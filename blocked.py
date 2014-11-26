@@ -34,6 +34,8 @@ class BlockDiagonalMatrix(object):
             self.subblock.append(full.matrix((nrow[i],ncol[i])))
             self.irow.append(sum(self.nrow[:i]))
             self.icol.append(sum(self.ncol[:i]))
+        self.irow = tuple(self.irow)
+        self.icol = tuple(self.icol)
 
     def __str__(self):
         """ Formatted output based on full matrix class
