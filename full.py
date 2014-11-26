@@ -498,7 +498,7 @@ class matrix(numpy.ndarray):
         """
         assert len(rdim) == len(cdim)
         import blocked
-        new = blocked.matrix(rdim, cdim)
+        new = blocked.BlockDiagonalMatrix(rdim, cdim)
         rstart = 0
         cstart = 0
         for i in range(len(rdim)):

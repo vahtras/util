@@ -1,5 +1,6 @@
 import full
-class matrix:
+
+class BlockDiagonalMatrix(object):
     """ Blocked matrix class based on lists of full matrices"""
 
     def __init__(self,nrow,ncol):
@@ -207,20 +208,11 @@ class matrix:
         return new
 
     def unblock(self):
-        #print "unblock r c",self.nrow,self.ncol
         nrows=sum(self.nrow)
         ncols=sum(self.ncol)
         new=full.matrix((nrows,ncols))
         for i in range(self.nblocks):
-            try:
-                new[self.irow[i]:self.irow[i]+self.nrow[i],self.icol[i]:self.icol[i]+self.ncol[i]]=self.subblock[i]
-            except ValueError:
-                print "blocked.matrix.unblock:ValueError:"
-                print "i row col",i,self.nrow[i],self.ncol[i]
-                print "lhs",new
-                print "rhs",self.subblock[i]
-                import sys
-                sys.exit(1)
+            new[self.irow[i]:self.irow[i]+self.nrow[i],self.icol[i]:self.icol[i]+self.ncol[i]]=self.subblock[i]
         return new
 
     def T(self):
@@ -310,7 +302,7 @@ class matrix:
          
       
 def unit(nbl,factor=1):
-   new=matrix(nbl,nbl)
+   new=BlockDiagonalMatrix(nbl,nbl)
    for i in range(len(nbl)):
       if nbl[i]:
          new.subblock[i]=full.unit(nbl[i],factor)
