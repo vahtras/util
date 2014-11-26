@@ -4,24 +4,7 @@ class BlockDiagonalMatrix(object):
     """ Blocked matrix class based on lists of full matrices"""
 
     def __init__(self,nrow,ncol):
-        """ Constructur of the class. 
-        Example
-        >>> TR=matrix([2,1],[2,1])
-
-        # Dimensions of subblocks
-        >>> print TR.nrow, TR.ncol
-        [2, 1] [2, 1]
-
-        # Offset dimensions of subblocks
-        >>> print TR.irow, TR.icol
-        [0, 2] [0, 2]
-
-        # Row and column rank equal
-        >>> matrix([3,2],[1])
-        Traceback (most recent call last):
-        AssertionError
-
-        """
+        """ Constructur of the class.""" 
 
         assert ( len(nrow) == len(ncol) )
         self.nblocks=len(nrow)
@@ -38,16 +21,7 @@ class BlockDiagonalMatrix(object):
         self.icol = tuple(self.icol)
 
     def __str__(self):
-        """ Formatted output based on full matrix class
-        >>> TR=matrix([1],[1])
-        >>> print TR
-        <BLANKLINE>
-        Block 1
-        <BLANKLINE>
-         (1, 1) 
-                      Column   1
-        <BLANKLINE>
-        """
+        """ Formatted output based on full matrix class """
 
         retstr=""
         for i in range(self.nblocks):
@@ -343,110 +317,3 @@ class triangular:
       return new
    def unblock(self):
       return self.unpack().unblock().pack()
-            
-      
-      
-if __name__ == "__main__":
-   nbas=(2,1,0)
-   norb=(2,1,0)
-   from full import header
-   #
-   # init
-   #
-   if 1:
-      header('init')
-      f=matrix(nbas,norb)
-   if 0:
-      header('random')
-      f.random()
-   #
-   # print
-   #
-   if 0:
-      header('str')
-      print f
-   if 0:
-      header('tr')
-      print f.T()
-
-   if 0:
-      header('mul')
-      print f.T()*f
-   if 0:
-      header('rmul')
-      print f,2*f
-   if 0:
-      header('add')
-      print f+f
-   if 0:
-      header('sub')
-      print f-f
-   if 0:
-      header('neg')
-      print -f
-   if 0:
-      header('unit')
-      print unit((3,2),2)
-   if 0:
-      header('div')
-      print f/f
-      print f/2
-   if 0:
-      header('rdiv')
-      print 2./f
-   #
-   if 0:
-      header('unblock')
-      print f.unblock()
-   if 0:
-      header('func')
-      import math
-      f=lambda x: 1.0/math.sqrt(x)
-      a=matrix((3,8),(3,8)).random()
-      print a
-      S=a.T()*a
-      T=S.func(f)
-      print "S T TST",S,T,T*S*T
-      S=S.unblock()
-      T=T.unblock()
-      print "S T TST",S,T,T*S*T
-   if 0:
-      header ('func2')
-      import math
-      f=lambda x: 1.0/math.sqrt(x)
-      a=full.matrix((11,11)).random()
-      S=a.T*a
-      Sbl=S.block((3,8),(3,8))
-      Tbl=Sbl.func(f)
-      print "S T TST",Sbl,Tbl,Tbl*Sbl*Tbl
-#
-# Blocked triangular tests
-#
-   #
-   # init
-   #
-   if 0:
-      header('init')
-      tr=triangular((3,2,1))
-   #
-   # print
-   #
-   if 0:
-      header('print')
-      print tr
-   #
-   #
-   #
-   if 0:
-      header('random')
-      tr.random()
-      print tr
-
-   #print tr+tr
-   #g=matrix(norb,norb)
-   #print g.pack()
-   #print tr.triangular2square()
-   #dim=[2,1]
-   #f=triangular(dim)
-   ##print f
-   #print f.unblock()
