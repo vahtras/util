@@ -29,6 +29,20 @@ class TestBlocked(unittest.TestCase):
     def test_incompatible_dim_raises(self):
         self.assertRaises(AssertionError, BlockDiagonalMatrix, (1, 2), (3,))
 
+    def test_str(self):
+        self.assertEqual(str(self.bdm), """
+Block 1
+
+ (2, 2) 
+              Column   1    Column   2
+
+Block 2
+
+ (1, 1) 
+              Column   1
+""")
+
+
     def test_unblock(self):
         blocked = BlockDiagonalMatrix((2, 1), (2, 1))
         blocked[0][:, :] = ((1, 2), (3, 4))
