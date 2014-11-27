@@ -224,36 +224,43 @@ def unit(nbl,factor=1):
          new.subblock[i]=full.unit(nbl[i],factor)
    return new
 
-class triangular:
+class triangular(object):
+
    def __init__(self,dim):
       self.nblocks=len(dim)
       self.dim=dim
       self.subblock=[]
       for i in range(self.nblocks):
          self.subblock.append(full.triangular((dim[i],dim[i])))
+
    def __str__(self):
       retstr=""
       for i in range(self.nblocks):
          if (self.dim[i]):
             retstr+="\nBlock %d\n"%(i+1) + str(self.subblock[i])
       return retstr
+
    def random(self):
       for i in range(self.nblocks):
          self.subblock[i].random()
+
    def __add__(self,other):
       new=triangular(self.dim)
       for i in range(self.nblocks):
          new.subblock[i]=self.subblock[i]+other.subblock[i]
       return new
+
    def __sub__(self,other):
       new=triangular(self.dim)
       for i in range(self.nblocks):
          new.subblock[i]=self.subblock[i]-other.subblock[i]
       return new
+
    def unpack(self):
-      new=matrix(self.dim,self.dim)
+      new=BlockDiagonalMatrix(self.dim,self.dim)
       for i in range(self.nblocks):
          new.subblock[i]=self.subblock[i].unpack()
       return new
+
    def unblock(self):
       return self.unpack().unblock().pack()
