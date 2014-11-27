@@ -55,93 +55,54 @@ class BlockDiagonalMatrix(object):
         return self
 
     def __mul__(self,other):
-        """Multiplication blockwise
-        Example:
-        >>> M = matrix([6, 5], [4, 2]) * matrix([4, 2], [3, 1])
-        >>> print M.nrow, M.ncol
-        [6, 5] [3, 1]
-        """
+        """Multiplication blockwise """
         
-        new=matrix(self.nrow,other.ncol)
+        new=BlockDiagonalMatrix(self.nrow,other.ncol)
         for i in range(self.nblocks):
            if self.nrow[i]:
               new.subblock[i]=self.subblock[i]*other.subblock[i]
         return new
 
     def __rmul__(self,other):
-        """Scalar multiplication
-        Example:
-        >>> A = matrix([1],[1]); A.subblock[0][0,0] = 1; print 2*A
-        <BLANKLINE>
-        Block 1
-        <BLANKLINE>
-         (1, 1) 
-                      Column   1
-               1      2.00000000
-        <BLANKLINE>
-        """
-        new=matrix(self.nrow,self.ncol)
+        """Scalar multiplication"""
+
+        new=BlockDiagonalMatrix(self.nrow,self.ncol)
         for i in range(self.nblocks):
            if self.nrow[i]:
                new.subblock[i]=other*self.subblock[i]
         return new
 
     def __add__(self,other):
-        """Addition
-        Example:
-        >>> A = matrix([1], [1]); A.subblock[0][0, 0] = 2; print A + A
-        <BLANKLINE>
-        Block 1
-        <BLANKLINE>
-         (1, 1) 
-                      Column   1
-               1      4.00000000
-        <BLANKLINE>
-        """
-        new=matrix(self.nrow,self.ncol)
+        """Addition blockwise"""
+
+        new=BlockDiagonalMatrix(self.nrow,self.ncol)
         for i in range(self.nblocks):
            if self.nrow[i]:
                new.subblock[i]=self.subblock[i]+other.subblock[i]
         return new
 
     def __sub__(self,other):
-        """Subtraction
-        Example:
-        >>> A = matrix([1], [1]); A.subblock[0][0, 0] = 2; print A - A
-        <BLANKLINE>
-        Block 1
-        <BLANKLINE>
-         (1, 1) 
-                      Column   1
-        <BLANKLINE>
-        """
-        new=matrix(self.nrow,self.ncol)
+        """Subtraction blockwize"""
+
+        new=BlockDiagonalMatrix(self.nrow,self.ncol)
         for i in range(self.nblocks):
             if self.nrow[i]:
                 new.subblock[i]=self.subblock[i]-other.subblock[i]
         return new
 
     def __neg__(self):
-        """Negation
-        Example:
-        >>> A = matrix([1], [1]); A.subblock[0][0, 0] = 3; print -A
-        <BLANKLINE>
-        Block 1
-        <BLANKLINE>
-         (1, 1) 
-                      Column   1
-               1     -3.00000000
-        <BLANKLINE>
-        """
-        new=matrix(self.nrow,self.ncol)
+        """Negation blockwise"""
+
+        new=BlockDiagonalMatrix(self.nrow,self.ncol)
         for i in range(self.nblocks):
             if self.nrow[i]:
                 new.subblock[i]=-self.subblock[i]
         return new
 
     def __div__(self,other):
-        "Solve linear equations"""
-        new=matrix(self.nrow,self.ncol)
+        "Solve linear equations blockwise"""
+
+        new=BlockDiagonalMatrix(self.nrow,self.ncol)
         for i in range(self.nblocks):
             if self.nrow[i]:
                 if isinstance(other,self.__class__):
@@ -151,28 +112,7 @@ class BlockDiagonalMatrix(object):
         return new
 
     def __rdiv__(self,other):
-        """Inversion
-        Example:
-        >>> M = matrix([2,1], [2,1])
-        >>> M.subblock[0][0, 0] = 2.0
-        >>> M.subblock[0][1, 1] = 1.0
-        >>> M.subblock[1][0, 0] = 4.0
-        >>> print 1/M
-        <BLANKLINE>
-        Block 1
-        <BLANKLINE>
-         (2, 2) 
-                      Column   1    Column   2
-               1      0.50000000    0.00000000
-               2      0.00000000    1.00000000
-        <BLANKLINE>
-        Block 2
-        <BLANKLINE>
-         (1, 1) 
-                      Column   1
-               1      0.25000000
-        <BLANKLINE>
-        """
+        """Inversion """
         return unit(self.nrow,other)/self
 
     def pack(self):
@@ -218,9 +158,9 @@ class BlockDiagonalMatrix(object):
         return new
 
     def sqrt(self):
-        new=matrix(self.ncol,self.nrow)
+        new=BlockDiagonalMatrix(self.ncol,self.nrow)
         for i in range(self.nblocks):
-            new.subblock[i]=self.subblock[i].invsqrt()
+            new.subblock[i]=self.subblock[i].sqrt()
         return new
 
     def invsqrt(self):
@@ -255,8 +195,8 @@ class BlockDiagonalMatrix(object):
         return sum
 
     def eigvec(self):
-        u=matrix(self.nrow,self.nblocks*[1])
-        v=matrix(self.nrow,self.ncol)
+        u=BlockDiagonalMatrix(self.nrow,self.nblocks*[1])
+        v=BlockDiagonalMatrix(self.nrow,self.ncol)
         for i in range(self.nblocks):
            u.subblock[i],v.subblock[i]=self.subblock[i].eigvec()
         return u,v

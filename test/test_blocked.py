@@ -63,3 +63,76 @@ Block 2
         blocked_unit = unit((2, 1))
         self.assert_allclose(blocked_unit, ref)
 
+    def test_mul(self):
+        self.bdm[0][:, :] = [[0, 1], [2, 3]]
+        self.bdm[1][:, :] = [[2]]
+        self.assert_allclose(self.bdm*self.bdm, [[[2, 3], [6, 11]], [[4]]])
+
+    def test_rmul(self):
+        self.bdm[0][:, :] = [[0, 1], [2, 3]]
+        self.bdm[1][:, :] = [[2]]
+        self.assert_allclose(2*self.bdm, [[[0, 2], [4, 6]], [[4]]])
+
+    def test_add(self):
+        self.bdm[0][:, :] = [[0, 1], [2, 3]]
+        self.bdm[1][:, :] = [[2]]
+        self.assert_allclose(self.bdm + self.bdm, [[[0, 2], [4, 6]], [[4]]])
+
+    def test_add(self):
+        self.bdm[0][:, :] = [[0, 1], [2, 3]]
+        self.bdm[1][:, :] = [[2]]
+        self.assert_allclose(self.bdm - self.bdm, [[[0, 0], [0, 0]], [[0]]])
+
+    def test_neg(self):
+        self.bdm[0][:, :] = [[0, 1], [2, 3]]
+        self.bdm[1][:, :] = [[2]]
+        self.assert_allclose(-self.bdm, [[[0, -1], [-2, -3]], [[-2]]])
+
+    def test_div(self):
+        self.bdm[0][:, :] = [[0, 1], [2, 3]]
+        self.bdm[1][:, :] = [[2]]
+        self.assert_allclose(self.bdm/self.bdm, [[[1, 0], [0, 1]], [[1]]])
+
+    def test_rdiv(self):
+        self.bdm[0][:, :] = [[0, 1], [2, 3]]
+        self.bdm[1][:, :] = [[2]]
+        self.assert_allclose(1/self.bdm, [[[-1.5, 0.5], [1, 0]], [[0.5]]])
+
+    def test_sqrt(self):
+        self.bdm[0][:, :] = [[4, 0], [0, 4]]
+        self.bdm[1][:, :] = [[9]]
+        self.assert_allclose(self.bdm.sqrt(), [[[2, 0], [0, 2]], [[3]]])
+
+    def test_eigvec(self):
+        self.bdm[0][:, :] = [[4, 0], [0, 4]]
+        self.bdm[1][:, :] = [[9]]
+        u, v = self.bdm.eigvec()
+        self.assert_allclose(u, [4, 9])
+        self.assert_allclose(v, [[[1, 0], [0, 1]], [[1]]])
+        
+
+class BlockedTriangularTest(unittest.TestCase):
+
+        def setUp(self):
+            pass
+
+        def teardown(self):
+            pass
+
+        def test_str(self):
+            bt = triangular((2, 1))
+            print bt
+            self.assertEqual(str(bt), """
+Block 1
+
+    0.00000000
+    0.00000000    0.00000000
+
+Block 2
+
+    0.00000000
+"""
+                ) 
+
+        
+
