@@ -103,6 +103,11 @@ Block 2
         self.bdm[1][:, :] = [[9]]
         self.assert_allclose(self.bdm.sqrt(), [[[2, 0], [0, 2]], [[3]]])
 
+    def test_isqrt(self):
+        self.bdm[0][:, :] = [[4, 0], [0, 4]]
+        self.bdm[1][:, :] = [[9]]
+        self.assert_allclose(self.bdm.invsqrt(), [[[.5, 0], [0, .5]], [[1./3]]])
+
     def test_eigvec(self):
         self.bdm[0][:, :] = [[4, 0], [0, 4]]
         self.bdm[1][:, :] = [[9]]

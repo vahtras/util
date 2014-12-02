@@ -164,7 +164,7 @@ class BlockDiagonalMatrix(object):
         return new
 
     def invsqrt(self):
-        new=matrix(self.ncol,self.nrow)
+        new=BlockDiagonalMatrix(self.ncol,self.nrow)
         for i in range(self.nblocks):
             new.subblock[i]=self.subblock[i].invsqrt()
         return new
