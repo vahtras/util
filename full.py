@@ -637,6 +637,27 @@ class matrix(numpy.ndarray):
         """
         return numpy.sum(self.view(numpy.ndarray), **kwargs)
 
+    def symmetrize_first_beta( self ):
+#silly solution, transforms matrix B[ (x,y,z) ][ (xx, xy, xz, yy, yz, zz) ] into array
+# Symmtrized UT array    B[ (xxx, xxy, xxz, xyy, xyz, xzz, yyy, yyz, yzz, zzz) ]
+      #print self
+      #raise SystemExit
+       new = matrix( 10 )
+
+       new[0] = self[0,0]
+       new[1] = (self[0,1] + self[1,0] ) /2
+       new[2] = (self[0,2] + self[2,0] ) /2
+       new[3] = (self[0,3] + self[1,1] ) /2
+       new[4] = (self[0,4] + self[1,2] + self[2,1] ) /3
+       new[5] = (self[0,5] + self[2,2] ) /2
+       new[6] = self[1,3] 
+       new[7] = (self[1,4] + self[2,3] ) /2
+       new[8] = (self[1,5] + self[2,4] ) /2
+       new[9] = self[2,5]
+
+       return new
+
+
 def unit(n, factor=1):
     """Return unit matrix, optionally scaled"""
     vec = matrix((n*n,))
