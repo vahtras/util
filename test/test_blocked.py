@@ -114,6 +114,11 @@ Block 2
         u, v = self.bdm.eigvec()
         self.assert_allclose(u, [4, 9])
         self.assert_allclose(v, [[[1, 0], [0, 1]], [[1]]])
+
+    def test_get_columns(self):
+        self.bdm[0][:, :] = [[1, 2], [3, 4]]
+        subset = self.bdm.get_columns((1, 0))
+        self.assert_allclose(subset[0], [1, 3])
         
 
 class BlockedTriangularTest(unittest.TestCase):
