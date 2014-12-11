@@ -120,6 +120,10 @@ Block 2
         bdm_T = self.bdm.T()
         self.assert_allclose(bdm_T[0], [[1, 3], [2, 4]])
 
+    def test_get_columns(self):
+        self.bdm[0][:, :] = [[1, 2], [3, 4]]
+        subset = self.bdm.get_columns((1, 0))
+        self.assert_allclose(subset[0], [1, 3])
         
 
 class BlockedTriangularTest(unittest.TestCase):

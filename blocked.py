@@ -215,6 +215,12 @@ class BlockDiagonalMatrix(object):
            new.subblock[i]=self.subblock[i].gs(Sbl.subblock[i])
         return new
 
+    def get_columns(self, columns_per_symmetry):
+        new = BlockDiagonalMatrix(self.nrow, columns_per_symmetry)
+        for oldblock, newblock, cols in zip(self, new, columns_per_symmetry):
+            if cols:
+                newblock[:, :] = oldblock[:, :cols]
+        return new
          
       
 def unit(nbl,factor=1):
