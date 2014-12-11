@@ -114,6 +114,12 @@ Block 2
         u, v = self.bdm.eigvec()
         self.assert_allclose(u, [4, 9])
         self.assert_allclose(v, [[[1, 0], [0, 1]], [[1]]])
+
+    def test_transpose(self):
+        self.bdm[0][:, :] = [[1, 2], [3, 4]]
+        bdm_T = self.bdm.T()
+        self.assert_allclose(bdm_T[0], [[1, 3], [2, 4]])
+
         
 
 class BlockedTriangularTest(unittest.TestCase):

@@ -152,7 +152,7 @@ class BlockDiagonalMatrix(object):
                2      1.00000000    0.00000000
         <BLANKLINE>
         """
-        new=matrix(self.ncol,self.nrow)
+        new=BlockDiagonalMatrix(self.ncol,self.nrow)
         for i in range(self.nblocks):
             new.subblock[i]=self.subblock[i].T
         return new
