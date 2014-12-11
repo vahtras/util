@@ -270,3 +270,12 @@ class triangular(object):
 
    def unblock(self):
       return self.unpack().unblock().pack()
+
+   @staticmethod
+   def init(blocks):
+        triangular_matrices = [full.triangular.init(block) for block in blocks]
+        dimensions = [tmat.dim for tmat in triangular_matrices]
+        new = triangular(dimensions)
+        new.subblock = triangular_matrices
+        return new
+        
