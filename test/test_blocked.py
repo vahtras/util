@@ -128,16 +128,16 @@ Block 2
 
 class BlockedTriangularTest(unittest.TestCase):
 
-        def setUp(self):
-            pass
+    def setUp(self):
+        pass
 
-        def teardown(self):
-            pass
+    def teardown(self):
+        pass
 
-        def test_str(self):
-            bt = triangular((2, 1))
-            print bt
-            self.assertEqual(str(bt), """
+    def test_str(self):
+        bt = triangular((2, 1))
+        print bt
+        self.assertEqual(str(bt), """
 Block 1
 
     0.00000000
@@ -147,7 +147,13 @@ Block 2
 
     0.00000000
 """
-                ) 
+        ) 
 
+    def test_init(self):
+        bt = triangular.init([[1., 2., 3.], [4.]])
+        numpy.testing.assert_almost_equal(bt.subblock[0], [1., 2., 3.])
+        numpy.testing.assert_almost_equal(bt.subblock[1], [4.])
+
+        
         
 
