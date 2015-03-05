@@ -56,6 +56,10 @@ class FortranBinary():
         """Close file"""
         self.file.close()
 
+    def record_byte_lengths(self):
+        reclengths = [self.reclen for record in self]
+        return tuple(reclengths)
+
 class Rec():
     def __init__(self, data):
         self.data = data

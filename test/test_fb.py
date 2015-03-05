@@ -117,6 +117,11 @@ class TestFortranBinary(unittest.TestCase):
         xref = (1., 2., 3.,  5., 6., 7.)
         np.testing.assert_allclose(x, xref)
 
+    def test_count_records_and_lengths(self):
+        ffile = os.path.join(self.tdir, 'fort.3')
+        fb = FortranBinary(ffile)
+        self.assertTupleEqual(fb.record_byte_lengths(), (16, 24, 24))
+
 
 if __name__ == "__main__":
     unittest.main()
