@@ -17,21 +17,22 @@ def match_and_get(pattern):
         return fields
     return (text, match, get, [])
         
-rules=[]
+if __name__ == '__main__':
+    rules=[]
 
-for p in open(sys.argv[1]).readlines():
-    #print p.split()
-    rules.append(match_and_get(p))
+    for p in open(sys.argv[1]).readlines():
+        #print p.split()
+        rules.append(match_and_get(p))
+            
+    with open(sys.argv[2]) as target:
+        for line in target:
+            for t, m, g, r in rules:
+                if m(line):
+                    for s in range(m.skip): line=next(target)
+                    for l in range(m.lines): line+=next(target)
+                    r.append(g(line))
+
+    from util import full
+    for t,m,g,r in rules:
+        print t, full.init(r).T
         
-with open(sys.argv[2]) as target:
-    for line in target:
-        for t, m, g, r in rules:
-            if m(line):
-                for s in range(m.skip): line=next(target)
-                for l in range(m.lines): line+=next(target)
-                r.append(g(line))
-
-from util import full
-for t,m,g,r in rules:
-    print t, full.init(r).T
-    
