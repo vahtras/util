@@ -32,7 +32,7 @@ class BlockDiagonalMatrix(object):
     def __getitem__(self,n):
         """ Index argument returns subblock
         Example
-        >>> M = matrix([2], [2])
+        >>> M = BlockDiagonalMatrix([2], [2])
         >>> print M[0]
         <BLANKLINE>
          (2, 2) 
@@ -44,7 +44,7 @@ class BlockDiagonalMatrix(object):
     def random(self):
         """ Fill matrix subblocks with random numbers
         Example
-        >>> M = matrix([2], [2]).random()
+        >>> M = BlockDiagonalMatrix([2], [2]).random()
         >>> assert M.subblock[0][0,0] < 1 and M.subblock[0][0,0] > 0
         >>> assert M.subblock[0][1,0] < 1 and M.subblock[0][1,0] > 0
         >>> assert M.subblock[0][0,1] < 1 and M.subblock[0][0,1] > 0
@@ -134,7 +134,7 @@ class BlockDiagonalMatrix(object):
     def T(self):
         """Transpose
         Example:
-        >>> M=matrix([2],[2]); M.subblock[0][0,1]=1; M.subblock[0][1,0]=2
+        >>> M=BlockDiagonalMatrix([2],[2]); M.subblock[0][0,1]=1; M.subblock[0][1,0]=2
         >>> print M, M.T()
         <BLANKLINE>
         Block 1
@@ -180,7 +180,7 @@ class BlockDiagonalMatrix(object):
     def tr(self):
         """Sum blockwise traces
         Example:
-        >>> M = matrix([2, 1], [2, 1])
+        >>> M = BlockDiagonalMatrix([2, 1], [2, 1])
         >>> M.subblock[0][0, 0] = 3
         >>> M.subblock[0][1, 1] = 2
         >>> M.subblock[1][0, 0] = 1
