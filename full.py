@@ -524,7 +524,7 @@ class matrix(numpy.ndarray):
 
     def clear(self):
         """Zero myself"""
-        self *= 0
+        self[...] = 0
 
     def cross(self, *args):
         """ With out argument return 3x3 matrix Ax, 
