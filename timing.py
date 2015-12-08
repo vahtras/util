@@ -14,10 +14,3 @@ class timing:
    def stop(self):
       self.t1=time.clock()
       self.w1=time.time()
-
-if __name__ == "__main__":
-   import os
-   if 1:
-      timeme=timing("test")
-      os.system("sleep 3")
-      print timeme
