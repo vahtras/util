@@ -78,7 +78,7 @@ Block 2
         self.bdm[1][:, :] = [[2]]
         self.assert_allclose(self.bdm + self.bdm, [[[0, 2], [4, 6]], [[4]]])
 
-    def test_add(self):
+    def test_sub(self):
         self.bdm[0][:, :] = [[0, 1], [2, 3]]
         self.bdm[1][:, :] = [[2]]
         self.assert_allclose(self.bdm - self.bdm, [[[0, 0], [0, 0]], [[0]]])
