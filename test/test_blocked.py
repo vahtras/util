@@ -204,6 +204,10 @@ Block 2
         numpy.testing.assert_almost_equal(bt.subblock[0], [1., 2., 3.])
         numpy.testing.assert_almost_equal(bt.subblock[1], [4.])
 
+    @mock.patch.object(numpy.random, 'random')
+    def test_blocked_random(self, mock_random):
+        M = triangular([3, 2]).random()
+        self.assertTrue(mock_random.calls, 2)
         
         
 
