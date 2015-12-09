@@ -93,6 +93,11 @@ Block 2
         self.bdm[1][:, :] = [[2]]
         self.assert_allclose(self.bdm/self.bdm, [[[1, 0], [0, 1]], [[1]]])
 
+    def test_scalar_div(self):
+        self.bdm[0][:, :] = [[0, 1], [2, 3]]
+        self.bdm[1][:, :] = [[2]]
+        self.assert_allclose(self.bdm/2, [[[0, .5], [1, 1.5]], [[1]]])
+
     def test_rdiv(self):
         self.bdm[0][:, :] = [[0, 1], [2, 3]]
         self.bdm[1][:, :] = [[2]]
@@ -124,6 +129,11 @@ Block 2
         self.bdm[0][:, :] = [[1, 2], [3, 4]]
         subset = self.bdm.get_columns((1, 0))
         self.assert_allclose(subset[0], [1, 3])
+
+    def test_func(self):
+        self.bdm[0][:, :] = [[1, 0], [0, 16]]
+        self.bdm[1][:, :] = [[25]]
+        self.assert_allclose(self.bdm.sqrt(), [[[1, 0], [0, 4]], [[5]]])
         
 
 class BlockedTriangularTest(unittest.TestCase):
