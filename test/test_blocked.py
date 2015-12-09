@@ -226,5 +226,9 @@ Block 2
         ubt = bt.unpack()
         numpy.testing.assert_almost_equal(ubt.subblock[0], [[1, 2], [2, 3]])
         numpy.testing.assert_almost_equal(ubt.subblock[1], [[4]])
-        
+
+    def test_unblock(self):
+        bt = triangular.init([[1., 2., 3.], [4.]])
+        ubl = bt.unblock()
+        numpy.testing.assert_almost_equal(ubl, [1., 2., 3., 0., 0., 4.])
 
