@@ -209,5 +209,22 @@ Block 2
         M = triangular([3, 2]).random()
         self.assertTrue(mock_random.calls, 2)
         
+    def test_add(self):
+        bt = triangular.init([[1., 2., 3.], [4.]])
+        bt = bt + bt
+        numpy.testing.assert_almost_equal(bt.subblock[0], [2., 4., 6.])
+        numpy.testing.assert_almost_equal(bt.subblock[1], [8.])
+
+    def test_sub(self):
+        bt = triangular.init([[1., 2., 3.], [4.]])
+        bt = bt - bt
+        numpy.testing.assert_almost_equal(bt.subblock[0], [0., 0., 0.])
+        numpy.testing.assert_almost_equal(bt.subblock[1], [0.])
+
+    def test_unpack(self):
+        bt = triangular.init([[1., 2., 3.], [4.]])
+        ubt = bt.unpack()
+        numpy.testing.assert_almost_equal(ubt.subblock[0], [[1, 2], [2, 3]])
+        numpy.testing.assert_almost_equal(ubt.subblock[1], [[4]])
         
 
