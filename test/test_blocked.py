@@ -1,4 +1,5 @@
 import unittest
+import mock
 import numpy
 from ..blocked import *
 
@@ -134,6 +135,11 @@ Block 2
         self.bdm[0][:, :] = [[1, 0], [0, 16]]
         self.bdm[1][:, :] = [[25]]
         self.assert_allclose(self.bdm.sqrt(), [[[1, 0], [0, 4]], [[5]]])
+
+    @mock.patch.object(numpy.random, 'random')
+    def test_blocked_random(self, mock_random):
+        M = BlockDiagonalMatrix([2], [2]).random()
+        self.assertTrue(mock_random.calls, 2)
         
 
 class BlockedTriangularTest(unittest.TestCase):
