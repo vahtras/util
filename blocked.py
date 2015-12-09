@@ -172,20 +172,13 @@ class BlockDiagonalMatrix(object):
 
     def func(self,f):
          """ Blockwise function of matrix"""
-         new=matrix(self.ncol,self.nrow)
+         new=BlockDiagonalMatrix(self.ncol,self.nrow)
          for i in range(self.nblocks):
              new.subblock[i]=self.subblock[i].func(f)
          return new
 
     def tr(self):
         """Sum blockwise traces
-        Example:
-        >>> M = BlockDiagonalMatrix([2, 1], [2, 1])
-        >>> M.subblock[0][0, 0] = 3
-        >>> M.subblock[0][1, 1] = 2
-        >>> M.subblock[1][0, 0] = 1
-        >>> print M.tr()
-        6.0
         """
 
         sum=0
@@ -202,17 +195,16 @@ class BlockDiagonalMatrix(object):
         return u,v
 
     def qr(self):
-        q=matrix(self.nrow,self.nrow)
-        r=matrix(self.nrow,self.ncol)
+        q=BlockDiagonalMatrix(self.nrow,self.nrow)
+        r=BlockDiagonalMatrix(self.nrow,self.ncol)
         for i in range(self.nblocks):
           q.subblock[i],r.subblock[i]=self.subblock[i].qr()
         return q,r
 
-    def gs(self,S):
-        new=matrix(self.nrow,self.ncol)
-        Sbl=S.block(self.nrow,self.nrow)
+    def GS(self,S):
+        new=BlockDiagonalMatrix(self.nrow,self.ncol)
         for i in range(self.nblocks):
-           new.subblock[i]=self.subblock[i].gs(Sbl.subblock[i])
+           new.subblock[i]=self.subblock[i].GS(S.subblock[i])
         return new
 
     def get_columns(self, columns_per_symmetry):

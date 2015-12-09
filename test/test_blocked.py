@@ -1,7 +1,9 @@
 import unittest
 import mock
 import numpy
+import math
 from ..blocked import *
+from ..full import init
 
 class TestBlocked(unittest.TestCase):
 
@@ -134,14 +136,46 @@ Block 2
     def test_func(self):
         self.bdm[0][:, :] = [[1, 0], [0, 16]]
         self.bdm[1][:, :] = [[25]]
-        self.assert_allclose(self.bdm.sqrt(), [[[1, 0], [0, 4]], [[5]]])
+        self.assert_allclose(self.bdm.func(math.sqrt), [[[1, 0], [0, 4]], [[5]]])
 
     @mock.patch.object(numpy.random, 'random')
     def test_blocked_random(self, mock_random):
         M = BlockDiagonalMatrix([2], [2]).random()
         self.assertTrue(mock_random.calls, 2)
-        
 
+    def test_tr(self):
+        M = BlockDiagonalMatrix([2, 1], [2, 1])
+        M.subblock[0][0, 0] = 3
+        M.subblock[0][1, 1] = 2
+        M.subblock[1][0, 0] = 1
+        self.assertEqual(M.tr(), 6.0)
+
+    def test_qr_Q(self):
+        A = BlockDiagonalMatrix([3], [3])
+        A.subblock[0] = init([[12, 6, -4], [-51, 167, 24], [4, -68, -41]])
+        Q, R = A.qr()
+        numpy.testing.assert_almost_equal(Q[0], 
+            -init([[6./7, 3./7, -2./7], [-69./175, 158./175, 6./35], [-58./175, 6./175, -33./35]])
+            )
+    def test_qr_R(self):
+        A = BlockDiagonalMatrix([3], [3])
+        A.subblock[0] = init([[12, 6, -4], [-51, 167, 24], [4, -68, -41]])
+        Q, R = A[0].qr()
+        numpy.testing.assert_almost_equal(R, 
+            -init([[14, 0, 0], [21, 175, 0], [-14, -70, 35]])
+            )
+        numpy.testing.assert_almost_equal(A[0], Q*R)
+
+    def test_gram_schmidt(self):
+        S = BlockDiagonalMatrix([2], [2])
+        v = BlockDiagonalMatrix([2], [2])
+        Delta = 0.1
+        S.subblock[0] = init([[1.0, Delta], [Delta, 1.0]])
+        v.subblock[0] = init([[1.0, 0.0], [0.0, 1.0]])
+        u = v.GS(S)
+        u_ref = init([[1.0, 0.0], [-Delta/math.sqrt(1-Delta**2), 1.0/math.sqrt(1-Delta**2)]])
+        numpy.testing.assert_almost_equal(u[0], u_ref)
+        
 class BlockedTriangularTest(unittest.TestCase):
 
     def setUp(self):
