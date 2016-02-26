@@ -1,3 +1,4 @@
+import numpy
 import full
 
 class BlockDiagonalMatrix(object):
@@ -51,6 +52,18 @@ class BlockDiagonalMatrix(object):
         new = BlockDiagonalMatrix(rdim, cdim)
         for i, a in enumerate(arr):
             new.subblock[i][:, :] = matrices[i]
+        return new
+
+    @staticmethod
+    def init_from_array(arr, rdim, cdim):
+        assert numpy.dot(rdim, cdim) == len(arr)
+        new = BlockDiagonalMatrix(rdim, cdim)
+        start = 0
+        end = 0
+        for i, block in enumerate(new.subblock):
+            end += rdim[i]*cdim[i]
+            block[:, :] = full.init(arr[start: end]).reshape(block.shape, order='F')
+            start += rdim[i]*cdim[i]
         return new
 
     def random(self):

@@ -53,6 +53,21 @@ Block 2
         numpy.testing.assert_allclose(bdm.subblock[0], self.bdm.subblock[0])
         numpy.testing.assert_allclose(bdm.subblock[1], self.bdm.subblock[1])
 
+
+    def test_init_from_array_dimension_error(self):
+        with self.assertRaises(AssertionError):
+            bdm = BlockDiagonalMatrix.init_from_array(
+                [1, 2, 3], (2, 1), (2, 1)
+                )
+
+    def test_init_from_array(self):
+        self.bdm[0][:, :] = [[0, 2], [1, 3]]
+        self.bdm[1][:, :] = [[4]]
+        bdm = BlockDiagonalMatrix.init_from_array(range(5), (2, 1), (2, 1))
+        numpy.testing.assert_allclose(bdm.subblock[0], self.bdm.subblock[0])
+        numpy.testing.assert_allclose(bdm.subblock[1], self.bdm.subblock[1])
+        
+
     def test_unblock(self):
         blocked = BlockDiagonalMatrix((2, 1), (2, 1))
         blocked[0][:, :] = ((1, 2), (3, 4))
