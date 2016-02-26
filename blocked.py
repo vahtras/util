@@ -41,6 +41,18 @@ class BlockDiagonalMatrix(object):
         """
         return self.subblock[n]
 
+    @staticmethod
+    def init(*arr):
+        matrices = tuple(full.init(a) for a in arr)
+        for m in matrices:
+            assert len(m.shape) == 2, "blocked only for two dimensions"
+        rdim = tuple(m.shape[0] for m in matrices)
+        cdim = tuple(m.shape[1] for m in matrices)
+        new = BlockDiagonalMatrix(rdim, cdim)
+        for i, a in enumerate(arr):
+            new.subblock[i][:, :] = matrices[i]
+        return new
+
     def random(self):
         """ Fill matrix subblocks with random numbers
         Example

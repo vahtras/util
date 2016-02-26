@@ -46,6 +46,13 @@ Block 2
 """)
 
 
+    def test_init(self):
+        self.bdm[0][:, :] = [[1, 3], [2, 4]]
+        self.bdm[1][:, :] = [[5]]
+        bdm = BlockDiagonalMatrix.init([[1, 2], [3, 4]], [[5]])
+        numpy.testing.assert_allclose(bdm.subblock[0], self.bdm.subblock[0])
+        numpy.testing.assert_allclose(bdm.subblock[1], self.bdm.subblock[1])
+
     def test_unblock(self):
         blocked = BlockDiagonalMatrix((2, 1), (2, 1))
         blocked[0][:, :] = ((1, 2), (3, 4))
