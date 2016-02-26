@@ -66,6 +66,10 @@ Block 2
         bdm = BlockDiagonalMatrix.init_from_array(range(5), (2, 1), (2, 1))
         numpy.testing.assert_allclose(bdm.subblock[0], self.bdm.subblock[0])
         numpy.testing.assert_allclose(bdm.subblock[1], self.bdm.subblock[1])
+
+    def test_blocked_ravel(self):
+        bdm = BlockDiagonalMatrix.init_from_array(range(5), (2, 1), (2, 1))
+        numpy.testing.assert_allclose(bdm.ravel(order='F'), range(5))
         
 
     def test_unblock(self):

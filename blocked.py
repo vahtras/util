@@ -66,6 +66,21 @@ class BlockDiagonalMatrix(object):
             start += rdim[i]*cdim[i]
         return new
 
+    @property
+    def size(self):
+        return sum(b.size for b in self.subblock)
+
+    def ravel(self, **kwargs):
+        linear = full.matrix(self.size)
+        start = 0
+        end = 0
+        for s in self.subblock:
+            end += s.size
+            linear[start: end] = s.ravel(**kwargs)
+            start += s.size
+        return linear
+        
+
     def random(self):
         """ Fill matrix subblocks with random numbers
         Example
