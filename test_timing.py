@@ -1,6 +1,10 @@
 import unittest
-import mock
-import timing
+try:
+    import mock
+except ImportError:
+    from unittest import mock
+
+from . import timing
 
 
 class TimeTest(unittest.TestCase):

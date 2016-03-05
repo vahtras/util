@@ -1,5 +1,5 @@
 import numpy
-import full
+from . import full
 
 class BlockDiagonalMatrix(object):
     """ Blocked matrix class based on lists of full matrices"""

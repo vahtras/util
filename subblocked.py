@@ -1,5 +1,5 @@
 """Module with blocked matrix class"""
-import full
+from . import full
 
 
 class matrix:
@@ -76,15 +76,15 @@ class matrix:
                         self.icol[j]: self.icol[j] + self.ncol[j]
                         ] = self.subblock[i][j]
                 except ValueError:
-                    print "ValueError:"
-                    print "i, j", i, j
-                    print "irow, nrow", self.irow[i], self.nrow[i]
-                    print "icol, ncol", self.icol[j], self.ncol[j]
-                    print "lhs", new[
+                    print("ValueError:")
+                    print("i, j", i, j)
+                    print("irow, nrow", self.irow[i], self.nrow[i])
+                    print("icol, ncol", self.icol[j], self.ncol[j])
+                    print("lhs", new[
                         self.irow[i]: self.irow[i] + 
                         self.nrow[i], self.icol[j]
-                        ]
-                    print "rhs", self.subblock[i][j]
+                        ])
+                    print("rhs", self.subblock[i][j])
                     import sys
                     sys.exit(1)
         return new

@@ -48,9 +48,9 @@ class TestFortranBinary(unittest.TestCase):
         """
         ffile = os.path.join(self.tdir, 'fort.2')
         fb = FortranBinary(ffile)
-        rec  = fb.find('LABEL')
+        rec  = fb.find(b'LABEL')
 
-        self.assertEqual(rec.data, 'LABEL')
+        self.assertEqual(rec.data, b'LABEL')
 
     def test_2b(self):
         """Handle label not found
@@ -67,7 +67,7 @@ class TestFortranBinary(unittest.TestCase):
         """
         ffile = os.path.join(self.tdir, 'fort.2')
         fb = FortranBinary(ffile)
-        rec  = fb.find('NOLABEL')
+        rec  = fb.find(b'NOLABEL')
 
         self.assertEqual(rec, None)
 

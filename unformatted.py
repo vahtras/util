@@ -13,9 +13,9 @@ class FortranBinary():
             self.file = open(name,'wb')
         else:
             try:
-                self.file = open(name, 'rwb', 10)
+                self.file = open(name, 'rb', 10)
             except(IOError):
-                print "\n%s: file %s not found\n" % (__name__ + '.' + self.__class__.__name__, name)
+                print("\n%s: file %s not found\n" % (__name__ + '.' + self.__class__.__name__, name))
                 raise IOError
                 sys.exit(1)
         self.data = None
@@ -26,6 +26,9 @@ class FortranBinary():
 
     def __iter__(self):
         return self
+
+    def __next__(self):
+        return self.next()
 
     def next(self):
         """Read a Fortran record"""

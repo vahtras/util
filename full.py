@@ -2,6 +2,7 @@
 
 import math
 import numpy
+from . import subblocked, blocked
 
 class matrix(numpy.ndarray):
     """ A subclass of numpy.ndarray for matrix syntax and better printing """
@@ -23,12 +24,12 @@ class matrix(numpy.ndarray):
 
     def debug(self):
         """ Called for various error conditinos"""
-        print "type ", type(self)
-        print "shape ", self.shape
-        print "dtype", self.dtype
-        print "strides", self.strides
-        print "order", self.order
-        print "fmt", self.fmt
+        print("type ", type(self))
+        print("shape ", self.shape)
+        print("dtype", self.dtype)
+        print("strides", self.strides)
+        print("order", self.order)
+        print("fmt", self.fmt)
 
     def __str__(self):
         """Output formatting of matrix object, inspired by Dalton OUTPUT
@@ -74,7 +75,7 @@ class matrix(numpy.ndarray):
                 pass
             else:
                 columnsperblock = 5
-                fullblocks = c/columnsperblock
+                fullblocks = c//columnsperblock
                 trailblock = c % 5
                 for b in range(fullblocks):
                     crange = range(b*columnsperblock,(b+1)*columnsperblock)
@@ -109,7 +110,7 @@ class matrix(numpy.ndarray):
             losize = r*c
             if losize == 0:
                 return "\nZero dimension\n"
-            hisize = self.size/losize
+            hisize = self.size//losize
             altshape = (r, c, hisize)
             #print altshape
             alt = self.reshape(altshape, order=matrix.order)
@@ -169,7 +170,7 @@ class matrix(numpy.ndarray):
             try:
                 return numpy.dot(self, other)
             except ValueError:
-                print "full.matrix.__mul__:ValueError", self.shape, other.shape
+                print("full.matrix.__mul__:ValueError", self.shape, other.shape)
                 raise ValueError
         else:
             return other*self
@@ -314,8 +315,8 @@ class matrix(numpy.ndarray):
     def minor(self, i, j):
         """Matrix minor"""
         r, c = self.shape
-        rows = range(r)
-        cols = range(c)
+        rows = list(range(r))
+        cols = list(range(c))
         rows.remove(i)
         cols.remove(j)
         # bug
@@ -497,7 +498,6 @@ class matrix(numpy.ndarray):
         Only diagonal blocks defined by input dimensions are considered
         """
         assert len(rdim) == len(cdim)
-        import blocked
         new = blocked.BlockDiagonalMatrix(rdim, cdim)
         rstart = 0
         cstart = 0
@@ -510,7 +510,6 @@ class matrix(numpy.ndarray):
     def subblocked(self, rdim, cdim):
         """Return fully blocked version of matrix
         """
-        import subblocked
         new = subblocked.matrix(rdim, cdim)
         rstart = 0
         for i in range(new.rowblocks):
@@ -566,10 +565,10 @@ class matrix(numpy.ndarray):
         cos2a = dot*dot/((self&self)*(other&other))
         if (cos2a > 1):
             if cos2a-1 > 1e-14:
-                print "angle:self", self
-                print "angle:other", other
-                print "angle:dot", dot
-                print "angle:cos2a=1+%20.14e" % (cos2a - 1)
+                print("angle:self", self)
+                print("angle:other", other)
+                print("angle:dot", dot)
+                print("angle:cos2a=1+%20.14e" % (cos2a - 1))
                 raise ValueError
             else:
                 #print "full.matrix.angle:
@@ -666,7 +665,7 @@ def unit(n, factor=1):
 
 def permute(select, n):
     """Return permutation matrix based on input"""
-    complement = range(n)
+    complement = list(range(n))
     for i in range(n):
         if i in select:
             complement.remove(i)
