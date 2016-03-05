@@ -208,7 +208,7 @@ class matrix(numpy.ndarray):
         c = numpy.outer(self, other).reshape(self.shape+other.shape)
         return c.view(matrix)
      
-    def __div__(self, other):
+    def __truediv__(self, other):
         """Solution of linear equation/inversion
         Example:
         >>> A=matrix((2,2)).random(); x=matrix((2,1)).random()
@@ -299,7 +299,7 @@ class matrix(numpy.ndarray):
         return self._I
     I = property(fget=inv)
 
-    def __rdiv__(self, other):
+    def __rtruediv__(self, other):
         """Division with Matrix instance in denominator"""
         r, _ = self.shape
         return unit(r, other)/self

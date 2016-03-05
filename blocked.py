@@ -139,7 +139,7 @@ class BlockDiagonalMatrix(object):
                 new.subblock[i]=-self.subblock[i]
         return new
 
-    def __div__(self,other):
+    def __truediv__(self,other):
         "Solve linear equations blockwise"""
 
         new=BlockDiagonalMatrix(self.nrow,self.ncol)
@@ -151,7 +151,7 @@ class BlockDiagonalMatrix(object):
                     new.subblock[i]=self.subblock[i]/other
         return new
 
-    def __rdiv__(self,other):
+    def __rtruediv__(self,other):
         """Inversion """
         return unit(self.nrow,other)/self
 

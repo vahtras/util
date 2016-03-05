@@ -86,7 +86,6 @@ class TestMatrix(unittest.TestCase):
         M[0, 0] = 1; M[0, 1] = 2; M[1, 0] = 3; M[1, 1] = 4
         np.testing.assert_equal(M/2, [[0.5, 1.0], [1.5, 2.0]])
 
-    @unittest.skip('div')
     def test_div_self(self):
         M = matrix((2, 2))
         M[0, 0] = 1; M[0, 1] = 2; M[1, 0] = 3; M[1, 1] = 4
@@ -146,13 +145,11 @@ class TestMatrix(unittest.TestCase):
         M = init([[2, 1], [1, 2]])
         self.assertEqual(M._I, None)
 
-    @unittest.skip('wait')
     def test_inv(self):
         M = init([[3, 1], [1, -3]])
         M.inv()
         np.testing.assert_almost_equal(M._I, [[0.3, 0.1], [0.1, -0.3]])
 
-    @unittest.skip('wait')
     def test_rdiv(self):
         M = init([[3., 1.], [1., -3.]])
         np.testing.assert_almost_equal(1/M, [[0.3, 0.1], [0.1, -0.3]])
@@ -211,7 +208,6 @@ class TestMatrix(unittest.TestCase):
         u_ref = init([[1.0, 0.0], [-Delta/sqrt(1-Delta**2), 1.0/sqrt(1-Delta**2)]])
         np.testing.assert_almost_equal(u, u_ref)
 
-    @unittest.skip('wait')
     def test_gram_schmidt_as_transformation(self):
         Delta = 0.1
         S = init([[1.0, Delta], [Delta, 1.0]])
@@ -233,7 +229,6 @@ class TestMatrix(unittest.TestCase):
         Sih = S.invsqrt()
         np.testing.assert_almost_equal(Sih*Sih, S.I)
 
-    @unittest.skip('j')
     def test_funcsqrt(self):
         Delta = 0.1
         S = init([[1.0, Delta], [Delta, 1.0]])
