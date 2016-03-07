@@ -226,6 +226,9 @@ class matrix(numpy.ndarray):
             new = (1.0/other)*self
         return new
 
+    def __div__(self, other):
+        return self.__truediv__(other)
+
     def scatteradd(self, other, rows=None, columns=None):
         """ See scatter"""
         self.scatter(other, rows, columns, add=1)
@@ -303,6 +306,9 @@ class matrix(numpy.ndarray):
         """Division with Matrix instance in denominator"""
         r, _ = self.shape
         return unit(r, other)/self
+
+    def __rdiv__(self, other):
+        return self.__rtruediv__(other)
 
     def tr(self):
         """Trace"""

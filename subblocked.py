@@ -1,5 +1,4 @@
 """Module with blocked matrix class"""
-from . import full
 
 
 class matrix:
@@ -10,6 +9,7 @@ class matrix:
         nrow: integer tuple, blocked row dimension
         ncol: integer tuple, blocked column dimension
         """
+        from . import full
         self.rowblocks = len(nrow)
         self.colblocks = len(ncol)
         self.nrow = nrow

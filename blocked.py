@@ -1,5 +1,4 @@
 import numpy
-from . import full
 
 class BlockDiagonalMatrix(object):
     """ Blocked matrix class based on lists of full matrices"""
@@ -8,6 +7,7 @@ class BlockDiagonalMatrix(object):
         """ Constructur of the class.""" 
 
         assert ( len(nrow) == len(ncol) )
+        from . import full
         self.nblocks=len(nrow)
         self.nrow=nrow
         self.ncol=ncol
@@ -44,7 +44,8 @@ class BlockDiagonalMatrix(object):
 
     @staticmethod
     def init(*arr):
-        matrices = tuple(full.init(a) for a in arr)
+        from .full import init
+        matrices = tuple(init(a) for a in arr)
         for m in matrices:
             assert len(m.shape) == 2, "blocked only for two dimensions"
         rdim = tuple(m.shape[0] for m in matrices)
@@ -56,6 +57,7 @@ class BlockDiagonalMatrix(object):
 
     @staticmethod
     def init_from_array(arr, rdim, cdim):
+        from . import full
         assert numpy.dot(rdim, cdim) == len(arr)
         new = BlockDiagonalMatrix(rdim, cdim)
         start = 0
@@ -71,6 +73,7 @@ class BlockDiagonalMatrix(object):
         return sum(b.size for b in self.subblock)
 
     def ravel(self, **kwargs):
+        from . import full
         linear = full.matrix(self.size)
         start = 0
         end = 0
@@ -151,9 +154,15 @@ class BlockDiagonalMatrix(object):
                     new.subblock[i]=self.subblock[i]/other
         return new
 
+    def __div__(self, other):
+        return self.__truediv__(other)
+
     def __rtruediv__(self,other):
         """Inversion """
         return unit(self.nrow,other)/self
+
+    def __rdiv__(self, other):
+        return self.__rtruediv__(other)
 
     def pack(self):
         for i in range(self.nblocks):
@@ -164,6 +173,7 @@ class BlockDiagonalMatrix(object):
         return new
 
     def unblock(self):
+        from . import full
         nrows=sum(self.nrow)
         ncols=sum(self.ncol)
         new=full.matrix((nrows,ncols))
@@ -256,15 +266,17 @@ class BlockDiagonalMatrix(object):
          
       
 def unit(nbl,factor=1):
+   from .full import unit
    new=BlockDiagonalMatrix(nbl,nbl)
    for i in range(len(nbl)):
       if nbl[i]:
-         new.subblock[i]=full.unit(nbl[i],factor)
+         new.subblock[i]=unit(nbl[i],factor)
    return new
 
 class triangular(object):
 
    def __init__(self,dim):
+      from . import full
       self.nblocks=len(dim)
       self.dim=dim
       self.subblock=[]
@@ -305,6 +317,7 @@ class triangular(object):
 
    @staticmethod
    def init(blocks):
+        from . import full
         triangular_matrices = [full.triangular.init(block) for block in blocks]
         dimensions = [tmat.dim for tmat in triangular_matrices]
         new = triangular(dimensions)

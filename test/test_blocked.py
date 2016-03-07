@@ -260,3 +260,6 @@ Block 2
         ubl = bt.unblock()
         numpy.testing.assert_almost_equal(ubl, [1., 2., 3., 0., 0., 4.])
 
+
+if __name__ == "__main__":
+    unittest.main()
