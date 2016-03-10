@@ -166,7 +166,7 @@ class matrix(numpy.ndarray):
         <BLANKLINE>
         """
      
-        if isinstance(other, self.__class__):
+        if isinstance(other, self.__class__) or self.is_sibling(other):
             try:
                 return numpy.dot(self, other)
             except ValueError:
@@ -174,6 +174,9 @@ class matrix(numpy.ndarray):
                 raise ValueError
         else:
             return other*self
+
+    def is_sibling(self, other):
+        return self.__class__.__mro__[1] == other.__class__.__mro__[1]
  
     def x(self, other):
         """Outer product
@@ -220,7 +223,7 @@ class matrix(numpy.ndarray):
         <BLANKLINE>
         """
      
-        if isinstance(other, self.__class__):
+        if isinstance(other, self.__class__) or self.is_sibling(other):
             new = numpy.linalg.solve(other, self)
         else:
             new = (1.0/other)*self
