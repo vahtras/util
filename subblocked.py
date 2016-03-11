@@ -65,6 +65,7 @@ class matrix:
     def unblock(self):
         """Unblock to full matrix"""
 
+        from . import full
         nrows = sum(self.nrow)
         ncols = sum(self.ncol)
         new = full.matrix((nrows, ncols))
