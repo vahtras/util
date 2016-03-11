@@ -117,6 +117,28 @@ class TestFortranBinary(unittest.TestCase):
         xref = (1., 2., 3.,  5., 6., 7.)
         np.testing.assert_allclose(x, xref)
 
+    def test_4(self):
+        """Read string"""
+        ffile = os.path.join(self.tdir, 'fort.4')
+        fb = FortranBinary(ffile)
+        rec = fb.find('ABC')
+        self.assertIn(b'ABC', rec)
+
+    def test_4b(self):
+        """Read string"""
+        ffile = os.path.join(self.tdir, 'fort.4')
+        fb = FortranBinary(ffile)
+        rec = fb.find(b'ABC')
+        self.assertIn(b'ABC', rec)
+
+    def test_4c(self):
+        """Read string"""
+        ffile = os.path.join(self.tdir, 'fort.4')
+        fb = FortranBinary(ffile)
+        with self.assertRaises(ValueError):
+            rec = fb.find(1.0)
+
+
     def test_count_records_and_lengths(self):
         ffile = os.path.join(self.tdir, 'fort.3')
         fb = FortranBinary(ffile)

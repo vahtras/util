@@ -52,8 +52,18 @@ class FortranBinary():
 
     def find(self, label):
         """Find string label in file"""
+        if type(label) == str:
+            try:
+                blabel = bytes(label, 'utf-8')
+            except TypeError:
+                blabel = label
+        elif type(label) == bytes:
+            blabel = label
+        else:
+            raise ValueError
+
         for rec in self:
-            if label in rec: return rec
+            if blabel in rec: return rec
 
     def close(self):
         """Close file"""
