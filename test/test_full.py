@@ -357,7 +357,7 @@ class TestMatrix(unittest.TestCase):
         z = init([0, 0, 1])
         np.testing.assert_equal(A.rot(pi/2, z), [0, 1, 0])
 
-    def test_rot(self):
+    def test_rot2(self):
         A = init([1, 0, 0])
         z = init([0, 0, 1])
         o = init([1, 1, 0])
@@ -384,12 +384,29 @@ class TestMatrix(unittest.TestCase):
         B = init([0, 1, 0])
         np.testing.assert_almost_equal(A.angle(B), pi/2)
 
+    def test_angled(self):
+        A = init([0, 0, 1])
+        B = init([0, 1, 0])
+        np.testing.assert_almost_equal(A.angled(B), 90)
+
+    def test_angle2(self):
+        A = init([0, 0, 1])
+        B = init([-1, 1, 0])
+        np.testing.assert_almost_equal(A.angle(B), 3*pi/4)
+
     def test_dihedral_open(self):
         A = init([1, 1, 0])
         B = init([1, 0, 0])
         C = init([0, 0, 0])
         D = init([0, -1, 0])
         np.testing.assert_equal(A.dihedral(B, C, D), pi)
+
+    def test_dihedrald_open(self):
+        A = init([1, 1, 0])
+        B = init([1, 0, 0])
+        C = init([0, 0, 0])
+        D = init([0, -1, 0])
+        np.testing.assert_equal(A.dihedral(B, C, D), 180)
 
     def test_dihedral_eclipsed(self):
         A = init([1, 1, 0])
