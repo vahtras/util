@@ -1,8 +1,13 @@
 import unittest
 import mock
 import os
+import sys
 from ..unformatted import FortranBinary
 import numpy as np
+
+def mock_it(builtin_name):
+   name = ('builtins.%s' if sys.version_info >= (3,) else '__builtin__.%s') % builtin_name
+   return mock.patch(name)
 
 class TestFortranBinary(unittest.TestCase):
 
@@ -158,7 +163,7 @@ class TestFortranBinary(unittest.TestCase):
         with self.assertRaises(IOError):
             fb = FortranBinary(ffile)
 
-    @mock.patch('__builtin__.open')
+    @mock_it('open')
     def test_open_new(self, mock_open):
         ffile = os.path.join(self.tdir, 'newfile')
         fb = FortranBinary(ffile, 'new')
