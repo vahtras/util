@@ -325,15 +325,15 @@ class TestMatrix(unittest.TestCase):
         np.testing.assert_almost_equal(A. dist([0, 1, 0]), sqrt(2))
 
     def test_angle3(self):
-        A = init([1, 0, 0])
-        B = init([2, 0, 0])
-        C = init([1, 1, 0])
+        A = init([2., 0., 0.])
+        B = init([1., 0., 0.])
+        C = init([1., 1., 0.])
         self.assertAlmostEqual(A.angle3(B, C), pi/2)
     
     def test_angle3d(self):
-        A = init([1, 0, 0])
-        B = init([2, 0, 0])
-        C = init([1, 1, 0])
+        A = init([2., 0., 0.])
+        B = init([1., 0., 0.])
+        C = init([1., 1., 0.])
         self.assertAlmostEqual(A.angle3d(B, C), 90.)
 
     def test_angle(self):
