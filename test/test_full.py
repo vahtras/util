@@ -148,6 +148,20 @@ class TestMatrix(unittest.TestCase):
         M.scatter(M1, [0, 2], [0, 2]) 
         np.testing.assert_equal(M1, [[1, 0, 2], [0, 0, 0], [3, 0, 4]])
 
+    def test_scatter_rows(self):
+        M = matrix((2, 2))
+        M1 = matrix((3, 2))
+        M[0, 0] = 1; M[0, 1] = 2; M[1, 0] = 3; M[1, 1] = 4
+        M.scatter(M1, rows=[0, 2])
+        np.testing.assert_equal(M1, [[1, 2], [0, 0], [3, 4]])
+
+    def test_scatter_columns(self):
+        M = matrix((2, 2))
+        M1 = matrix((2, 3))
+        M[0, 0] = 1; M[0, 1] = 2; M[1, 0] = 3; M[1, 1] = 4
+        M.scatter(M1, columns=[0, 2])
+        np.testing.assert_equal(M1, [[1, 0, 2], [3, 0, 4]])
+
     def test_scatter_add(self):
         M = matrix((2, 2))
         M1 = matrix((3, 3)); M1[1, 1] = 5
