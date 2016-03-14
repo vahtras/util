@@ -390,8 +390,8 @@ class TestMatrix(unittest.TestCase):
         np.testing.assert_almost_equal(A.angled(B), 90)
 
     def test_angle2(self):
-        A = init([0, 0, 1])
-        B = init([-1, 1, 0])
+        A = init([.1, .0, 0.])
+        B = init([-.1, .1, 0.])
         np.testing.assert_almost_equal(A.angle(B), 3*pi/4)
 
     def test_dihedral_open(self):
@@ -406,7 +406,7 @@ class TestMatrix(unittest.TestCase):
         B = init([1, 0, 0])
         C = init([0, 0, 0])
         D = init([0, -1, 0])
-        np.testing.assert_equal(A.dihedral(B, C, D), 180)
+        np.testing.assert_equal(A.dihedrald(B, C, D), 180)
 
     def test_dihedral_eclipsed(self):
         A = init([1, 1, 0])
