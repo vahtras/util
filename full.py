@@ -641,8 +641,7 @@ class triangular(matrix):
         return obj
 
     def __array_finalize__(self, obj):
-        if obj is None: 
-            return
+        if obj is None: return
         self.dim = int(math.sqrt(0.25+2*obj.size))
         self.sshape = getattr(obj, 'sshape', (self.dim, self.dim))
         self.anti = getattr(obj, 'anti', False)
