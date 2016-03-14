@@ -88,11 +88,8 @@ class matrix(numpy.ndarray):
             r, c = self.shape[:2]
             hishape = self.shape[2:]
             losize = r*c
-            if losize == 0:
-                return "\nZero dimension\n"
             hisize = self.size//losize
             altshape = (r, c, hisize)
-            #print altshape
             alt = self.reshape(altshape, order=matrix.order)
             #
             # Given linear index n find tuple idx=(i0,i1,i2...) 
@@ -107,7 +104,6 @@ class matrix(numpy.ndarray):
                     #
                     dp = numpy.asarray(hishape[:i-1]).prod()
                     idx.append(k/dp)
-                    #print "idx", idx
                     k = k % dp
                 idx.append(k)
                 idx.reverse()
@@ -147,11 +143,7 @@ class matrix(numpy.ndarray):
         """
      
         if isinstance(other, self.__class__) or self.is_sibling(other):
-            try:
-                return numpy.dot(self, other)
-            except ValueError:
-                print("full.matrix.__mul__:ValueError", self.shape, other.shape)
-                raise ValueError
+            return numpy.dot(self, other)
         else:
             return other*self
 
@@ -402,18 +394,14 @@ class matrix(numpy.ndarray):
 
     def func(self, f):
         """General function of matrix"""
-        if False:
-            import scipy.linalg
-            return scipy.linalg.funm(self, f)
-        else:
-            val, vec = numpy.linalg.eig(self)
-            fval = val.view(matrix)
-            n = len(val)
-            new = matrix((n, n))
-            for i in range(n):
-                fval[i] = f(val[i])
-                new[i, i] = fval[i]
-            return vec*new*vec.inv()
+        val, vec = numpy.linalg.eig(self)
+        fval = val.view(matrix)
+        n = len(val)
+        new = matrix((n, n))
+        for i in range(n):
+            fval[i] = f(val[i])
+            new[i, i] = fval[i]
+        return vec*new*vec.inv()
 
 
     def exp(self):
@@ -546,7 +534,7 @@ class matrix(numpy.ndarray):
 
     def angle3d(self,  B, C):
         """Return A-B-C angle in degrees"""
-        return (self - B).angle(C - B)*180/math.pi
+        return self.angle3(B, C)*180/math.pi
 
     def angle(self, other):
         """Return A-O-B angle, O origin"""
