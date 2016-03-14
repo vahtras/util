@@ -303,6 +303,16 @@ class TestMatrix(unittest.TestCase):
         A = init([[1, 2], [3, 4]])
         np.testing.assert_almost_equal(A.antisym(), [[0, 0.5], [-0.5, 0]])
 
+    def test_mul_triangluar(self):
+        from ..full import triangular
+        A = triangular.init([1, 2, 3])
+        np.testing.assert_allclose(A*A, [[5, 8], [8, 13]])
+
+    def test_mul_triangluar(self):
+        from ..full import triangular
+        A = triangular.init([1, 2, 3])
+        np.testing.assert_allclose(2*A, [2., 4., 6.])
+
     def test_pack_triangular(self):
         from ..full import triangular
         A = init([[1, 2], [3, 4]])
