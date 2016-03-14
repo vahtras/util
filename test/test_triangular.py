@@ -41,5 +41,5 @@ class TestTriangular(unittest.TestCase):
     def test_mul(self):
         np.testing.assert_equal(self.twodim*self.twodim, [[5., 8.], [8., 13.]])
 
-if __name__ == "__main__":
+if __name__ == "__main__": #pragma: no cover
     unittest.main()

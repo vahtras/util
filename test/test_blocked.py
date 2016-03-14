@@ -1,8 +1,9 @@
 import unittest
 try:
     import mock
-except ImportError:
+except ImportError: # pragma: no cover
     from unittest import mock
+    raise
 import numpy
 import math
 from ..blocked import *
@@ -210,7 +211,7 @@ class BlockedTriangularTest(unittest.TestCase):
     def setUp(self):
         pass
 
-    def teardown(self):
+    def tearDown(self):
         pass
 
     def test_str(self):
@@ -261,5 +262,5 @@ Block 2
         numpy.testing.assert_almost_equal(ubl, [1., 2., 3., 0., 0., 4.])
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     unittest.main()

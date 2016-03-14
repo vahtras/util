@@ -1,7 +1,7 @@
 """Module with blocked matrix class"""
 
 
-class matrix:
+class matrix(object):
     """Blocked matrix class"""
     def __init__(self, nrow, ncol):
         """Initialize blocked matrix instance
@@ -71,24 +71,11 @@ class matrix:
         new = full.matrix((nrows, ncols))
         for i in range(self.rowblocks):
             for j in range(self.colblocks):
-                try:
-                    new[
-                        self.irow[i]: self.irow[i] + self.nrow[i],
-                        self.icol[j]: self.icol[j] + self.ncol[j]
-                        ] = self.subblock[i][j]
-                except ValueError:
-                    print("ValueError:")
-                    print("i, j", i, j)
-                    print("irow, nrow", self.irow[i], self.nrow[i])
-                    print("icol, ncol", self.icol[j], self.ncol[j])
-                    print("lhs", new[
-                        self.irow[i]: self.irow[i] + 
-                        self.nrow[i], self.icol[j]
-                        ])
-                    print("rhs", self.subblock[i][j])
-                    import sys
-                    sys.exit(1)
+                new[
+                    self.irow[i]: self.irow[i] + self.nrow[i],
+                    self.icol[j]: self.icol[j] + self.ncol[j]
+                    ] = self.subblock[i][j]
         return new
 
-if __name__ == "__main__":
+if __name__ == "__main__": #pragma: no cover
     pass

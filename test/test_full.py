@@ -10,7 +10,24 @@ class TestMatrix(unittest.TestCase):
         this = matrix.diag([1,1,1])
         np.testing.assert_equal(this, ref)
 
-    def test_str(self):
+    def test_str0(self):
+        M = matrix(3)
+        M[:] = range(3)
+        self.assertEqual(str(M.max()), "    2.00000000")
+
+    def test_str1(self):
+        M = matrix((2,))
+        M[0] = M[1] = 1
+        this = str(M)
+        ref = """
+ (2,) 
+              Column   1
+       1      1.00000000
+       2      1.00000000
+"""
+        self.assertEqual(this, ref)
+
+    def test_str2a(self):
         M = matrix((2,2))
         M[0,0] = M[1,1] = 1
         this = str(M)
@@ -22,7 +39,7 @@ class TestMatrix(unittest.TestCase):
 """
         self.assertEqual(this, ref)
 
-    def test_str2(self):
+    def test_str2b(self):
         M = matrix((6,6))
         for i in range(6):
             M[i, i] = float(i)
@@ -249,7 +266,7 @@ class TestMatrix(unittest.TestCase):
         A = init([[1, 2], [3, 4]])
         np.testing.assert_almost_equal(A.antisym(), [[0, 0.5], [-0.5, 0]])
 
-    def test_pack(self):
+    def test_pack_triangular(self):
         from ..full import triangular
         A = init([[1, 2], [3, 4]])
         B = triangular.init([1, 2.5, 4])
@@ -291,6 +308,17 @@ class TestMatrix(unittest.TestCase):
     def test_cross(self):
         A = init([1, 2, 3])
         np.testing.assert_equal(A.cross(), [[0, -3, 2], [3, 0, -1], [-2, 1, 0]])
+
+    def test_rot(self):
+        A = init([1, 0, 0])
+        z = init([0, 0, 1])
+        np.testing.assert_equal(A.rot(pi/2, z), [0, 1, 0])
+
+    def test_rot(self):
+        A = init([1, 0, 0])
+        z = init([0, 0, 1])
+        o = init([1, 1, 0])
+        np.testing.assert_equal(A.rot(pi/2, z, origin=o), [2, 1, 0])
 
     def test_dist(self):
         A = init([0, 0, 1])
@@ -342,5 +370,5 @@ class TestMatrix(unittest.TestCase):
              [0, 0, 0, 1],])
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     unittest.main()

@@ -12,24 +12,11 @@ class matrix(numpy.ndarray):
     def __new__(cls, shape, fmt=None):
         """Constructor ..."""            
         obj = numpy.zeros(shape, order=cls.order).view(cls)
-        if fmt is None:
-            obj.fmt = cls.fmt
         return obj
 
     def __array_finalize__(self, obj):
-        if obj is None:
-            return
-        self.fmt = getattr(obj, 'fmt', matrix.fmt)
+        if obj is None: return
         self._I = None
-
-    def debug(self):
-        """ Called for various error conditinos"""
-        print("type ", type(self))
-        print("shape ", self.shape)
-        print("dtype", self.dtype)
-        print("strides", self.strides)
-        print("order", self.order)
-        print("fmt", self.fmt)
 
     def __str__(self):
         """Output formatting of matrix object, inspired by Dalton OUTPUT
@@ -44,33 +31,26 @@ class matrix(numpy.ndarray):
         <BLANKLINE>
         """
      
-        #self.debug()
         retstr = '\n %s \n' % str(self.shape)
         if len(self.shape) == 1:
             r = self.shape[0]
-            #retstr+="(%d)\n"%(r)
-            if 0:
-                pass
-            else:
-                columnsperblock = 1
-                fullblocks = 1
-                trailblock = 0
-                for b in range(fullblocks):
-                    crange = range(b*columnsperblock,(b+1)*columnsperblock)
-                    retstr += " "*10
-                    for j in crange:
-                        retstr += "    Column%4d" % (j+1)
-                    retstr += '\n'
-                    for i in range(r):
-                        rownorm = math.fabs(self[i])
-                        if rownorm > 1e-8:
-                            retstr += "%8d  " % (i+1)
-                            retstr = retstr + self.fmt % self[i]
-                            retstr += '\n'
-                    retstr += '\n'
+            columnsperblock = 1
+            fullblocks = 1
+            trailblock = 0
+            for b in range(fullblocks):
+                crange = range(b*columnsperblock,(b+1)*columnsperblock)
+                retstr += " "*10
+                for j in crange:
+                    retstr += "    Column%4d" % (j+1)
+                retstr += '\n'
+                for i in range(r):
+                    rownorm = math.fabs(self[i])
+                    if rownorm > 1e-8:
+                        retstr += "%8d  " % (i+1)
+                        retstr = retstr + self.fmt % self[i]
+                        retstr += '\n'
         elif len(self.shape) == 2:
             r, c = self.shape
-            #retstr+="(%d,%d)\n"%(r, c)
             if 0:
                 pass
             else:
@@ -644,27 +624,6 @@ class matrix(numpy.ndarray):
            as of ubuntu 12.04 numpy.sum returns matrix([sum]) rather than sum
         """
         return numpy.sum(self.view(numpy.ndarray), **kwargs)
-
-    def symmetrize_first_beta( self ):
-#silly solution, transforms matrix B[ (x,y,z) ][ (xx, xy, xz, yy, yz, zz) ] into array
-# Symmtrized UT array    B[ (xxx, xxy, xxz, xyy, xyz, xzz, yyy, yyz, yzz, zzz) ]
-      #print self
-      #raise SystemExit
-       new = matrix( 10 )
-
-       new[0] = self[0,0]
-       new[1] = (self[0,1] + self[1,0] ) /2
-       new[2] = (self[0,2] + self[2,0] ) /2
-       new[3] = (self[0,3] + self[1,1] ) /2
-       new[4] = (self[0,4] + self[1,2] + self[2,1] ) /3
-       new[5] = (self[0,5] + self[2,2] ) /2
-       new[6] = self[1,3] 
-       new[7] = (self[1,4] + self[2,3] ) /2
-       new[8] = (self[1,5] + self[2,4] ) /2
-       new[9] = self[2,5]
-
-       return new
-
 
 def unit(n, factor=1):
     """Return unit matrix, optionally scaled"""

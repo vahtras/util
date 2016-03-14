@@ -1,7 +1,7 @@
 import unittest
 try:
     import mock
-except ImportError:
+except ImportError: #pragma: no cover
     from unittest import mock
 
 from . import timing
@@ -37,5 +37,5 @@ Time used in dummy               :      0.25 (cpu)       0.15 (wall)"""
     
         
 
-if __name__ == "__main__":
+if __name__ == "__main__": #pragma: no cover
     unittest.main()

@@ -1,4 +1,5 @@
 import unittest
+import mock
 import os
 from ..unformatted import FortranBinary
 import numpy as np
@@ -32,6 +33,7 @@ class TestFortranBinary(unittest.TestCase):
         xref = (1., 2., 3.)
         x = fb.readbuf(n, 'd')
         np.testing.assert_allclose(x, xref)
+        fb.close()
 
     def test_2(self):
         """Find and read label
@@ -51,6 +53,7 @@ class TestFortranBinary(unittest.TestCase):
         rec  = fb.find(b'LABEL')
 
         self.assertEqual(rec.data, b'LABEL')
+        fb.close()
 
     def test_2b(self):
         """Handle label not found
@@ -68,6 +71,7 @@ class TestFortranBinary(unittest.TestCase):
         ffile = os.path.join(self.tdir, 'fort.2')
         fb = FortranBinary(ffile)
         rec  = fb.find(b'NOLABEL')
+        fb.close()
 
         self.assertEqual(rec, None)
 
@@ -91,6 +95,7 @@ class TestFortranBinary(unittest.TestCase):
         # first record is int 3, 3
         nx, ny = fb.next().read('q', 2)
         np.testing.assert_allclose((nx, ny), (3, 3))
+        fb.close()
 
     def test_3b(self):
         """Read vecs
@@ -116,6 +121,7 @@ class TestFortranBinary(unittest.TestCase):
             x += list(fb.readbuf(3, 'd'))
         xref = (1., 2., 3.,  5., 6., 7.)
         np.testing.assert_allclose(x, xref)
+        fb.close()
 
     def test_4(self):
         """Read string"""
@@ -130,6 +136,7 @@ class TestFortranBinary(unittest.TestCase):
         fb = FortranBinary(ffile)
         rec = fb.find(b'ABC')
         self.assertIn(b'ABC', rec)
+        fb.close()
 
     def test_4c(self):
         """Read string"""
@@ -137,13 +144,26 @@ class TestFortranBinary(unittest.TestCase):
         fb = FortranBinary(ffile)
         with self.assertRaises(ValueError):
             rec = fb.find(1.0)
+        fb.close()
 
 
     def test_count_records_and_lengths(self):
         ffile = os.path.join(self.tdir, 'fort.3')
         fb = FortranBinary(ffile)
         self.assertTupleEqual(fb.record_byte_lengths(), (16, 24, 24))
+        fb.close()
+
+    def test_open_non_existing(self):
+        ffile = os.path.join(self.tdir, 'nofile')
+        with self.assertRaises(IOError):
+            fb = FortranBinary(ffile)
+
+    @mock.patch('__builtin__.open')
+    def test_open_new(self, mock_open):
+        ffile = os.path.join(self.tdir, 'newfile')
+        fb = FortranBinary(ffile, 'new')
+        mock_open.assert_called_once_with(ffile, 'wb')
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": #pragma: no cover
     unittest.main()
