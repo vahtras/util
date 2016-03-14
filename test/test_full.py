@@ -309,6 +309,12 @@ class TestMatrix(unittest.TestCase):
         B = triangular.init([1, 2.5, 4])
         np.testing.assert_almost_equal(A.pack(), B)
 
+    def test_pack_triangular_anti(self):
+        from ..full import triangular
+        A = init([[1, 2], [3, 4]])
+        B = triangular.init([0, -0.5, 0])
+        np.testing.assert_almost_equal(A.pack(anti=True), B)
+
     def test_lower(self):
         from ..full import triangular
         A = init([[1, 2], [3, 4]])

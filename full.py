@@ -540,17 +540,6 @@ class matrix(numpy.ndarray):
         """Return A-O-B angle, O origin"""
         dot = self & other
         cos2a = dot*dot/((self&self)*(other&other))
-        if (cos2a > 1):
-            if cos2a-1 > 1e-14:
-                print("angle:self", self)
-                print("angle:other", other)
-                print("angle:dot", dot)
-                print("angle:cos2a=1+%20.14e" % (cos2a - 1))
-                raise ValueError
-            else:
-                #print "full.matrix.angle:
-                #cosa reset to 1 due to numerical roundoff error"
-                cos2a = 1
         if dot > 0:
             cosa = math.sqrt(cos2a)
         else:
