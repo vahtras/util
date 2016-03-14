@@ -74,6 +74,29 @@ class TestMatrix(unittest.TestCase):
 """
         self.assertEqual(this, ref)
 
+    def test_str4(self):
+        M = matrix((2,2,2,2))
+        M[0,0,0,0] = M[1,1,1,1] = 1
+        this = str(M)
+        ref = """
+ (2, 2, 2, 2) 
+[0, 0]
+ (2, 2) 
+              Column   1    Column   2
+       1      1.00000000    0.00000000
+[1, 0]
+ (2, 2) 
+              Column   1    Column   2
+[0, 1]
+ (2, 2) 
+              Column   1    Column   2
+[1, 1]
+ (2, 2) 
+              Column   1    Column   2
+       2      0.00000000    1.00000000
+"""
+        self.assertEqual(this, ref)
+
     def test_mul(self):
         M = matrix((2, 2))
         M[0, 0] = M[1, 1] = 2.0

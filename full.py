@@ -103,7 +103,7 @@ class matrix(numpy.ndarray):
                     # integer divide by n0*...n(i-2), save remainder
                     #
                     dp = numpy.asarray(hishape[:i-1]).prod()
-                    idx.append(k/dp)
+                    idx.append(k//dp)
                     k = k % dp
                 idx.append(k)
                 idx.reverse()
