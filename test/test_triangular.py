@@ -7,6 +7,9 @@ class TestTriangular(unittest.TestCase):
     def setUp(self):
         self.twodim = triangular.init([1.,  2.,  3.])
         np.random.seed(0)
+        self.antisym = triangular((2, 2), anti=True)
+        self.antisym[1, 0] = 2.0
+
 
     def test_init_square_shape(self):
         self.assertEqual(self.twodim.sshape, (2, 2))
@@ -26,6 +29,12 @@ class TestTriangular(unittest.TestCase):
         self.assertEqual(self.twodim[1, 0], 2.)
         self.assertEqual(self.twodim[0, 1], 2.)
         self.assertEqual(self.twodim[1, 1], 3.)
+
+    def test_getitem_by_tuple_as(self):
+        self.assertEqual(self.antisym[0, 0], 0.)
+        self.assertEqual(self.antisym[1, 0], 2.)
+        self.assertEqual(self.antisym[0, 1], -2.)
+        self.assertEqual(self.antisym[1, 1], 0.)
 
     def test_getitem_by_scalar(self):
         self.assertEqual(self.twodim[0], 1.)
