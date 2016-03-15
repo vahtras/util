@@ -39,8 +39,16 @@ class TestTriangular(unittest.TestCase):
     def test_unpack(self):
         np.testing.assert_equal(self.twodim.unpack(), [[1., 2.], [2., 3.]])
 
+    def test_unpack_as(self):
+        As = triangular((2, 2), anti=True)
+        As.random()
+        np.testing.assert_allclose(As.unpack(), [[0.0000000,  -0.71518937],  [0.71518937, 0.00000000]])
+
     def test_mul(self):
         np.testing.assert_equal(self.twodim*self.twodim, [[5., 8.], [8., 13.]])
+
+    def test_mul_scalar(self):
+        np.testing.assert_equal(self.twodim*2, [2., 4., 6])
 
     def test_random(self):
         self.twodim.random()
