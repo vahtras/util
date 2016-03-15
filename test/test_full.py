@@ -308,7 +308,7 @@ class TestMatrix(unittest.TestCase):
         A = triangular.init([1, 2, 3])
         np.testing.assert_allclose(A*A, [[5, 8], [8, 13]])
 
-    def test_mul_triangluar(self):
+    def test_scalar_mul_triangluar(self):
         from ..full import triangular
         A = triangular.init([1, 2, 3])
         np.testing.assert_allclose(2*A, [2., 4., 6.])
