@@ -700,21 +700,14 @@ class triangular(matrix):
         """Unpack from triangular to square"""
         n = self.sshape[0]
         new = matrix((n, n))
-        try:
-            import pdpack
-            if self.anti:
-                new = pdpack.daptge(self, new)
-            else:
-                new = pdpack.dsptsi(self, new)
-        except ImportError:
-            for i in range(n):
-                new[i, i] = self[i, i]
-                for j in range(i):
-                    new[i, j] = self[i, j]
-                    if self.anti:
-                        new[j, i] = -self[i, j]
-                    else:
-                        new[j, i] = self[i, j]
+        for i in range(n):
+            new[i, i] = self[i, i]
+            for j in range(i):
+                new[i, j] = self[i, j]
+                if self.anti:
+                    new[j, i] = -self[i, j]
+                else:
+                    new[j, i] = self[i, j]
         return new
 
     def __mul__(self, other):
