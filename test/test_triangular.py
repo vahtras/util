@@ -45,6 +45,14 @@ class TestTriangular(unittest.TestCase):
         self.twodim[0, 1] = 4.
         np.testing.assert_equal(self.twodim, [1., 4., 3.])
 
+    def test_setitem_anti1(self):
+        self.antisym[0, 1] = -2.
+        np.testing.assert_equal(self.antisym, [0., 2., 0.])
+
+    def test_setitem_anti2(self):
+        self.antisym[1, 0] = 2.
+        np.testing.assert_equal(self.antisym, [0., 2., 0.])
+
     def test_unpack(self):
         np.testing.assert_equal(self.twodim.unpack(), [[1., 2.], [2., 3.]])
 
