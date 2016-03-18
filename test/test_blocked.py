@@ -3,7 +3,6 @@ try:
     import mock
 except ImportError: # pragma: no cover
     from unittest import mock
-    raise
 import numpy
 import math
 from ..blocked import *

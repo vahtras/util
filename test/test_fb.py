@@ -1,5 +1,8 @@
 import unittest
-import mock
+try:
+    import mock
+except ImportError:
+    from unittest import mock
 import os
 import sys
 from ..unformatted import FortranBinary
