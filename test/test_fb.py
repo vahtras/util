@@ -1,7 +1,7 @@
 import unittest
 try:
     import mock
-except ImportError:
+except ImportError:#pragma: no cover
     from unittest import mock
 import os
 import sys
