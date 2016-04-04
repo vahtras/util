@@ -51,39 +51,36 @@ class matrix(numpy.ndarray):
                         retstr += '\n'
         elif len(self.shape) == 2:
             r, c = self.shape
-            if 0:
-                pass
-            else:
-                columnsperblock = 5
-                fullblocks = c//columnsperblock
-                trailblock = c % 5
-                for b in range(fullblocks):
-                    crange = range(b*columnsperblock,(b+1)*columnsperblock)
-                    retstr += " "*10
-                    for j in crange:
-                        retstr += "    Column%4d" % (j+1)
-                    retstr += '\n'
-                    for i in range(r):
-                        rownorm = self[i, crange].norm2()
-                        if rownorm > 1e-8:
-                            retstr += "%8d  " % (i+1)
-                            for j in crange:
-                                retstr = retstr + self.fmt % self[i, j]
-                            retstr += '\n'
-                    retstr += '\n'
-                crange = range(fullblocks*columnsperblock, c)
-                if trailblock:
-                    retstr += " "*10
-                    for j in crange:
-                        retstr += "    Column%4d" % (j+1)
-                    retstr += '\n'
-                    for i in range(r):
-                        rownorm = self[i, crange].norm2()
-                        if rownorm > 1e-8:
-                            retstr += "%8d  " % (i+1)
-                            for j in crange:
-                                retstr += self.fmt % self[i, j]
-                            retstr += '\n'
+            columnsperblock = 5
+            fullblocks = c//columnsperblock
+            trailblock = c % 5
+            for b in range(fullblocks):
+                crange = range(b*columnsperblock,(b+1)*columnsperblock)
+                retstr += " "*10
+                for j in crange:
+                    retstr += "    Column%4d" % (j+1)
+                retstr += '\n'
+                for i in range(r):
+                    rownorm = self[i, crange].norm2()
+                    if rownorm > 1e-8:
+                        retstr += "%8d  " % (i+1)
+                        for j in crange:
+                            retstr = retstr + self.fmt % self[i, j]
+                        retstr += '\n'
+                retstr += '\n'
+            crange = range(fullblocks*columnsperblock, c)
+            if trailblock:
+                retstr += " "*10
+                for j in crange:
+                    retstr += "    Column%4d" % (j+1)
+                retstr += '\n'
+                for i in range(r):
+                    rownorm = self[i, crange].norm2()
+                    if rownorm > 1e-8:
+                        retstr += "%8d  " % (i+1)
+                        for j in crange:
+                            retstr += self.fmt % self[i, j]
+                        retstr += '\n'
         elif len(self.shape) > 2:
             r, c = self.shape[:2]
             hishape = self.shape[2:]
