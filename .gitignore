@@ -1,5 +1,9 @@
 *.pyc
 *.swp
 .coverage*
+.cache
 cover
 venv*
+/build
+/dist
+/util.egg-info
