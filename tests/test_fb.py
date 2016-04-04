@@ -5,7 +5,8 @@ except ImportError:#pragma: no cover
     from unittest import mock
 import os
 import sys
-from ..unformatted import FortranBinary
+from .context import util
+from util.unformatted import FortranBinary
 import numpy as np
 
 def mock_it(builtin_name):

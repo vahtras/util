@@ -5,8 +5,9 @@ except ImportError: # pragma: no cover
     from unittest import mock
 import numpy
 import math
-from ..blocked import *
-from ..full import init
+from .context import util
+from util.blocked import *
+from util.full import init
 
 class TestBlocked(unittest.TestCase):
 

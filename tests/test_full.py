@@ -1,7 +1,8 @@
 import unittest
 import numpy as np
 from math import sqrt, cos, exp, pi
-from ..full import matrix, init, unit, permute
+from .context import util
+from util.full import matrix, init, unit, permute, triangular
 
 class TestMatrix(unittest.TestCase):
 
@@ -304,35 +305,29 @@ class TestMatrix(unittest.TestCase):
         np.testing.assert_almost_equal(A.antisym(), [[0, 0.5], [-0.5, 0]])
 
     def test_mul_triangluar(self):
-        from ..full import triangular
         A = triangular.init([1, 2, 3])
         np.testing.assert_allclose(A*A, [[5, 8], [8, 13]])
 
     def test_scalar_mul_triangluar(self):
-        from ..full import triangular
         A = triangular.init([1, 2, 3])
         np.testing.assert_allclose(2*A, [2., 4., 6.])
 
     def test_pack_triangular(self):
-        from ..full import triangular
         A = init([[1, 2], [3, 4]])
         B = triangular.init([1, 2.5, 4])
         np.testing.assert_almost_equal(A.pack(), B)
 
     def test_pack_triangular_anti(self):
-        from ..full import triangular
         A = init([[1, 2], [3, 4]])
         B = triangular.init([0, -0.5, 0])
         np.testing.assert_almost_equal(A.pack(anti=True), B)
 
     def test_lower(self):
-        from ..full import triangular
         A = init([[1, 2], [3, 4]])
         B = triangular.init([1, 2, 4])
         np.testing.assert_almost_equal(A.lower(), B)
 
     def test_fold(self):
-        from ..full import triangular
         A = init([[1, 2], [3, 4]])
         B = triangular.init([1, sqrt(2)*2, 4]) #???
         np.testing.assert_almost_equal(A.fold(), B)

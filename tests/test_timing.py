@@ -4,7 +4,8 @@ try:
 except ImportError: #pragma: no cover
     from unittest import mock
 
-from . import timing
+from .context import util
+from util import timing
 
 
 class TimeTest(unittest.TestCase):

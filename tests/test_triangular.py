@@ -1,6 +1,8 @@
 import unittest
 import numpy as np
-from ..full import triangular
+from .context import util
+
+from util.full import triangular
 
 class TestTriangular(unittest.TestCase):
 

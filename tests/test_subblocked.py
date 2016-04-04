@@ -1,6 +1,7 @@
 import unittest
 import numpy
-from ..subblocked import matrix as SubBlockedMatrix
+from .context import util
+from util.subblocked import matrix as SubBlockedMatrix
 
 
 class NewTest(unittest.TestCase):
