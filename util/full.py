@@ -611,7 +611,7 @@ def permute(select, n):
     for i in range(n):
         if i in select:
             complement.remove(i)
-    permlist = select+complement
+    permlist = list(select) + complement
     new = matrix((n, n))
     for i in range(n):
         new[permlist[i], i] = 1
