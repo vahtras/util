@@ -7,5 +7,5 @@ setup(
     version="1.0",
     url="https://github.com/vahtras/util",
     packages=["util"],
-    install_requires=["numpy"],
+    install_requires=["numpy", "scipy"],
 )
