@@ -677,20 +677,20 @@ class triangular(matrix):
         else:
             i, j = args
             if self.anti and i < j:
-                ij = j*(j+1)/2+i
+                ij = j*(j+1)//2+i
                 return -vec[ij]
             else:
-                ij = i*(i+1)/2+j
+                ij = i*(i+1)//2+j
                 return vec[ij]
 
     def __setitem__(self, args, value):
         vec = self.view(matrix)
         i, j = args
         if i < j and self.anti:
-            ij = j*(j+1)/2+i
+            ij = j*(j+1)//2+i
             vec[ij] = -value
         else:
-            ij = i*(i+1)/2+j
+            ij = i*(i+1)//2+j
             vec[ij] = value
 
     def unpack(self):
