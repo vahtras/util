@@ -3,6 +3,7 @@
 .coverage*
 .cache
 cover
+htmlcov
 venv*
 /build
 /dist
