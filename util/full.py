@@ -629,7 +629,7 @@ class triangular(matrix):
     """Triangular packed matrix class"""
 
     def __new__(cls, shape, anti=False, fmt=None):
-        tshape = ((shape[0]*(shape[0]+1))/2,)
+        tshape = ((shape[0]*(shape[0]+1))//2,)
         obj = matrix(tshape).view(cls)
         obj.sshape = shape
         obj.anti = anti
