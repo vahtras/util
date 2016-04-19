@@ -5,9 +5,10 @@ except ImportError:#pragma: no cover
     from unittest import mock
 import os
 import sys
-from .context import util
-from util.unformatted import FortranBinary
 import numpy as np
+from .context import util, scripts
+from util.unformatted import FortranBinary
+import scripts.fb
 
 def mock_it(builtin_name):
    name = ('builtins.%s' if sys.version_info >= (3,) else '__builtin__.%s') % builtin_name
@@ -161,6 +162,15 @@ class TestFortranBinary(unittest.TestCase):
         fb = FortranBinary(ffile)
         self.assertTupleEqual(fb.record_byte_lengths(), (16, 24, 24))
         fb.close()
+
+    def test_as_script(self):
+        import sys
+        sys.argv[1:] = [os.path.join(self.tdir, 'fort.3'), '--records']
+        scripts.fb.main()
+        if hasattr(sys.stdout, "getvalue"):
+            print_output = sys.stdout.getvalue().strip()
+            self.assertEqual(print_output, '(16, 24, 24)')
+        
 
     def test_open_non_existing(self):
         ffile = os.path.join(self.tdir, 'nofile')
