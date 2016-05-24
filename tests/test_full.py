@@ -222,6 +222,10 @@ class TestMatrix(unittest.TestCase):
         M = init([[4, 1], [1, 3]])
         np.testing.assert_almost_equal(M.cofactor(), [[3., -1.], [-1., 4.]])
 
+    def test_cofactor_1by1(self):
+        M = init([[3.]])
+        np.testing.assert_almost_equal(M.cofactor(), [[1.0]])
+
     def test_eig(self):
         M = init([[0, 1], [1, 0]])
         np.testing.assert_almost_equal(M.eig(), [-1., 1.])

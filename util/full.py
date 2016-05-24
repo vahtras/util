@@ -306,6 +306,8 @@ class matrix(numpy.ndarray):
 
     def cofactor(self):
         """Co-factor matrix"""
+        if self.shape == (1, 1):
+            return init([[1.0]])
         r, c = self.shape
         assert(r == c)
         new = matrix((r, c))
