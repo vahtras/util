@@ -43,7 +43,7 @@ Block (2,2)
         A = SubBlockedMatrix([2], [2])
         A.subblock[0][0][:, :] = [[1., 2.], [3., 4]]
         AT = A.T()
-        numpy.testing.assert_allclose(AT.subblock[0][0], [[1., 3.], [2., 4.]])
+        numpy.testing.assert_allclose(AT[0, 0], [[1., 3.], [2., 4.]])
 
     def test_tranpose_offdiagonal_block(self):
         A = SubBlockedMatrix([1, 2], [1, 2])

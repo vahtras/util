@@ -35,6 +35,10 @@ class matrix(object):
                     str(self.subblock[i][j])
         return retstr
 
+    def __getitem__(self, args):
+        i, j = args
+        return self.subblock[i][j]
+
     def T(self):
         """Transpose of blocked matrix"""
 
