@@ -180,7 +180,7 @@ class TestFortranBinary(unittest.TestCase):
     @mock_it('open')
     def test_open_new(self, mock_open):
         ffile = os.path.join(self.tdir, 'newfile')
-        fb = FortranBinary(ffile, 'new')
+        fb = FortranBinary(ffile, 'wb')
         mock_open.assert_called_once_with(ffile, 'wb')
 
 
