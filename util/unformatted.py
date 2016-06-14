@@ -79,10 +79,13 @@ class Rec(object):
     def __init__(self, data):
         self.data = data
         self.loc = 0
-        self.reclen = len(data)
 
     def __contains__(self, obj):
         return obj in self.data
+
+    @property
+    def reclen(self):
+        return len(self.data)
 
     def read(self, num, fmt):
         """Read data from current record"""
