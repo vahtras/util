@@ -1,3 +1,6 @@
 test:
-	#python -m pytest --cov util --cov-report=html tests
-	python -m nose --with-coverage --cover-package util tests
+	python -m nose -x
+debug:
+	python -m nose -x --pdb
+coverage:
+	python -m nose --with-coverage --cover-package util --cover-html tests
