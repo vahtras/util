@@ -14,7 +14,6 @@ class FortranBinary(object):
         self.file = open(name, mode)
         self.data = None
         self.rec = None
-        self.loc = 0
         self.reclen = 0
 
     def __iter__(self):
@@ -32,7 +31,6 @@ class FortranBinary(object):
             self.reclen = size
             tail = self.file.read(self.pad)
             assert head == tail
-            self.loc = 0
             self.rec = Rec(self.data)
             return self.rec
         else:
