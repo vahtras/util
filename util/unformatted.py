@@ -14,7 +14,10 @@ class FortranBinary(object):
         self.file = open(name, mode)
         self.data = None
         self.rec = None
-        self.reclen = 0
+
+    @property
+    def reclen(self):
+        return self.rec.reclen
 
     def __iter__(self):
         return self
@@ -26,9 +29,8 @@ class FortranBinary(object):
         """Read a Fortran record"""
         head = self.file.read(self.pad)
         if head:
-            size = struct.unpack('i', head)[0]
-            self.data = self.file.read(size)
-            self.reclen = size
+            record_size = struct.unpack('i', head)[0]
+            self.data = self.file.read(record_size)
             tail = self.file.read(self.pad)
             assert head == tail
             self.rec = Rec(self.data)
