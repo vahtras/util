@@ -59,7 +59,7 @@ class FortranBinary(object):
             if blabel in rec:
                 return rec
 
-    def close(self):
+    def close_(self):
         """Close file"""
         self.file.close()
 
@@ -68,6 +68,10 @@ class FortranBinary(object):
 
         reclengths = [record.reclen for record in self]
         return tuple(reclengths)
+
+    def __getattr__(self, attr):
+        """Delegate unknown attributes to file member"""
+        return getattr(self.file, attr)
 
 class Rec(object):
     """Representation of a single Fortran record"""
