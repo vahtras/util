@@ -6,9 +6,9 @@ except ImportError:#pragma: no cover
 import os
 import sys
 import numpy as np
-from .context import util, scripts
-from util.unformatted import FortranBinary
-import scripts.fb
+#from .context import util, scripts
+from unformatted import FortranBinary
+import fb
 
 def mock_it(builtin_name):
    name = ('builtins.%s' if sys.version_info >= (3,) else '__builtin__.%s') % builtin_name
@@ -17,7 +17,7 @@ def mock_it(builtin_name):
 class TestFortranBinary(unittest.TestCase):
 
     def setUp(self):
-        self.tdir, _ = os.path.split(__file__)
+        self.tdir = os.path.join(os.path.split(__file__)[0], 'test_fb.d')
 
     def test_1(self):
         """Read int, float
@@ -166,7 +166,7 @@ class TestFortranBinary(unittest.TestCase):
     def test_as_script(self):
         import sys
         sys.argv[1:] = [os.path.join(self.tdir, 'fort.3'), '--records']
-        scripts.fb.main()
+        fb.main()
         if hasattr(sys.stdout, "getvalue"):
             print_output = sys.stdout.getvalue().strip()
             self.assertEqual(print_output, '(16, 24, 24)')
