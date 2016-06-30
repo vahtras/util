@@ -538,7 +538,7 @@ class matrix(numpy.ndarray):
     def angle(self, other):
         """Return A-O-B angle, O origin"""
         dot = self & other
-        cos2a = dot*dot/((self&self)*(other&other))
+        cos2a = numpy.clip(dot*dot/((self&self)*(other&other)), 0., 1.)
         if dot > 0:
             cosa = math.sqrt(cos2a)
         else:
