@@ -13,4 +13,4 @@ dependencies:
         - conda install --yes --quiet python pip numpy scipy nose pytest pytest-cov mock
 test:
     post:
-        - make coverage
+        - python -m nose --with-coverage --cover-package util --cover-html tests --cover-html-dir=$CIRCLE_ARTIFACTS
