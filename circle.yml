@@ -11,3 +11,6 @@ dependencies:
         - conda update --yes conda
     override:
         - conda install --yes --quiet python pip numpy scipy nose pytest pytest-cov mock
+test:
+    post:
+        - make coverage
