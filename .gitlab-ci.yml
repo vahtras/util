@@ -5,8 +5,8 @@ before_script:
     
 
 python-36:
+    image: python:3.6
     script:
-        image: python:3.6
-        - pip install -r requirements.txt
-        - pip install -r requirements-dev.txt
-        - make test
+    - pip install -r requirements.txt
+    - pip install -r requirements-dev.txt
+    - make test
