@@ -4,9 +4,9 @@ before_script:
     - apt install -y gfortran libblas-dev liblapack-dev 
     
 
-run36:
+python-36:
     script:
-        - image: python:3.6
+        image: python:3.6
         - pip install -r requirements.txt
         - pip install -r requirements-dev.txt
         - make test
