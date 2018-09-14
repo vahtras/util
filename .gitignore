@@ -7,4 +7,6 @@ htmlcov
 venv*
 /build
 /dist
-/util.egg-info
+*.egg-info
+*.ipynb
+*.log
