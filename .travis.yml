@@ -21,6 +21,7 @@ before_install:
 install:
   - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy pytest pytest-cov mock
   - pip install pep8 python-coveralls
+  - pip install --upgrade coverage
 script:
   - make test
 after_success:
