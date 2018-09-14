@@ -1,6 +1,6 @@
 test:
-	python -m nose -x
+	python -m pytest -x --tb=line
 debug:
-	python -m nose -x --pdb
+	python -m pytest -x --pdb
 coverage:
-	python -m nose --with-coverage --cover-package util --cover-html tests
+	python -m pytest --cov=util --cov-report=html tests

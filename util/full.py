@@ -672,6 +672,9 @@ class triangular(matrix):
             retstr += "\n"
         return retstr
 
+    def __repr__(self):
+        return self.__str__()
+
     def __getitem__(self, args):
         vec = self.view(matrix)
         if type(args) == int:
