@@ -326,27 +326,27 @@ class TestMatrix(unittest.TestCase):
 
     def test_scalar_mul_triangluar(self):
         A = triangular.init([1, 2, 3])
-        np.testing.assert_allclose(2*A, [2., 4., 6.])
+        np.testing.assert_allclose(np.array(2*A), [2., 4., 6.])
 
     def test_pack_triangular(self):
         A = init([[1, 2], [3, 4]])
         B = triangular.init([1, 2.5, 4])
-        np.testing.assert_almost_equal(A.pack(), B)
+        np.testing.assert_almost_equal(np.array(A.pack()), np.array(B))
 
     def test_pack_triangular_anti(self):
         A = init([[1, 2], [3, 4]])
         B = triangular.init([0, -0.5, 0])
-        np.testing.assert_almost_equal(A.pack(anti=True), B)
+        np.testing.assert_almost_equal(np.array(A.pack(anti=True)), np.array(B))
 
     def test_lower(self):
         A = init([[1, 2], [3, 4]])
         B = triangular.init([1, 2, 4])
-        np.testing.assert_almost_equal(A.lower(), B)
+        np.testing.assert_almost_equal(np.array(A.lower()), np.array(B))
 
     def test_fold(self):
         A = init([[1, 2], [3, 4]])
         B = triangular.init([1, sqrt(2)*2, 4]) #???
-        np.testing.assert_almost_equal(A.fold(), B)
+        np.testing.assert_almost_equal(np.array(A.fold()), np.array(B))
 
     def test_norm2(self):
         A = init([3, 4])

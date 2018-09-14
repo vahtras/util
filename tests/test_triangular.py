@@ -17,7 +17,7 @@ class TestTriangular(unittest.TestCase):
         self.assertEqual(self.twodim.sshape, (2, 2))
 
     def test_init_values(self):
-        np.testing.assert_equal(self.twodim, [1., 2., 3.])
+        np.testing.assert_equal(np.array(self.twodim), [1., 2., 3.])
 
     def test_str(self):
         self.assertEqual(str(self.twodim), """
@@ -45,15 +45,15 @@ class TestTriangular(unittest.TestCase):
 
     def test_setitem(self):
         self.twodim[0, 1] = 4.
-        np.testing.assert_equal(self.twodim, [1., 4., 3.])
+        np.testing.assert_equal(np.array(self.twodim), [1., 4., 3.])
 
     def test_setitem_anti1(self):
         self.antisym[0, 1] = -2.
-        np.testing.assert_equal(self.antisym, [0., 2., 0.])
+        np.testing.assert_equal(np.array(self.antisym), [0., 2., 0.])
 
     def test_setitem_anti2(self):
         self.antisym[1, 0] = 2.
-        np.testing.assert_equal(self.antisym, [0., 2., 0.])
+        np.testing.assert_equal(np.array(self.antisym), [0., 2., 0.])
 
     def test_unpack(self):
         np.testing.assert_equal(self.twodim.unpack(), [[1., 2.], [2., 3.]])
@@ -67,16 +67,16 @@ class TestTriangular(unittest.TestCase):
         np.testing.assert_equal(self.twodim*self.twodim, [[5., 8.], [8., 13.]])
 
     def test_mul_scalar(self):
-        np.testing.assert_equal(self.twodim*2, [2., 4., 6])
+        np.testing.assert_equal(np.array(self.twodim*2), [2., 4., 6])
 
     def test_random(self):
         self.twodim.random()
-        np.testing.assert_allclose(self.twodim, [ 0.5488135 ,  0.71518937,  0.60276338])
+        np.testing.assert_allclose(np.array(self.twodim), [ 0.5488135 ,  0.71518937,  0.60276338])
 
     def test_random_antisymmetric(self):
         As = triangular((2, 2), anti=True)
         As.random()
-        np.testing.assert_allclose(As, [ 0.0000000 ,  0.71518937,  0.00000000])
+        np.testing.assert_allclose(np.array(As), [ 0.0000000 ,  0.71518937,  0.00000000])
 
 if __name__ == "__main__": #pragma: no cover
     unittest.main()

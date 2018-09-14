@@ -19,7 +19,7 @@ class TestBlocked(unittest.TestCase):
 
     def assert_allclose(self, this, ref):
         for t, r in zip(this, ref):
-            numpy.testing.assert_allclose(t, r)
+            numpy.testing.assert_allclose(numpy.array(t), r)
 
     def test_rowdim(self):
         self.assertTupleEqual(self.bdm.nrow, (2, 1))
@@ -88,7 +88,8 @@ Block 2
         blocked[0][:, :] = ((1, 2), (2, 1))
         blocked[1][:, :] = ((5,),)
         packed = [[1, 2, 1], [5]]
-        self.assert_allclose(blocked.pack().subblock, packed)
+        blocked_packed = blocked.pack()
+        self.assert_allclose(blocked_packed.subblock, packed)
         
 
     def test_unit(self):
@@ -230,8 +231,8 @@ Block 2
 
     def test_init(self):
         bt = triangular.init([[1., 2., 3.], [4.]])
-        numpy.testing.assert_almost_equal(bt.subblock[0], [1., 2., 3.])
-        numpy.testing.assert_almost_equal(bt.subblock[1], [4.])
+        numpy.testing.assert_almost_equal(numpy.array(bt.subblock[0]), [1., 2., 3.])
+        numpy.testing.assert_almost_equal(numpy.array(bt.subblock[1]), [4.])
 
     @mock.patch.object(numpy.random, 'random')
     def test_blocked_random(self, mock_random):
@@ -241,14 +242,14 @@ Block 2
     def test_add(self):
         bt = triangular.init([[1., 2., 3.], [4.]])
         bt = bt + bt
-        numpy.testing.assert_almost_equal(bt.subblock[0], [2., 4., 6.])
-        numpy.testing.assert_almost_equal(bt.subblock[1], [8.])
+        numpy.testing.assert_almost_equal(numpy.array(bt.subblock[0]), [2., 4., 6.])
+        numpy.testing.assert_almost_equal(numpy.array(bt.subblock[1]), [8.])
 
     def test_sub(self):
         bt = triangular.init([[1., 2., 3.], [4.]])
         bt = bt - bt
-        numpy.testing.assert_almost_equal(bt.subblock[0], [0., 0., 0.])
-        numpy.testing.assert_almost_equal(bt.subblock[1], [0.])
+        numpy.testing.assert_almost_equal(numpy.array(bt.subblock[0]), [0., 0., 0.])
+        numpy.testing.assert_almost_equal(numpy.array(bt.subblock[1]), [0.])
 
     def test_unpack(self):
         bt = triangular.init([[1., 2., 3.], [4.]])
@@ -259,7 +260,7 @@ Block 2
     def test_unblock(self):
         bt = triangular.init([[1., 2., 3.], [4.]])
         ubl = bt.unblock()
-        numpy.testing.assert_almost_equal(ubl, [1., 2., 3., 0., 0., 4.])
+        numpy.testing.assert_almost_equal(numpy.array(ubl), [1., 2., 3., 0., 0., 4.])
 
 
 if __name__ == "__main__": # pragma: no cover
