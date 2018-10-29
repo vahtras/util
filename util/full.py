@@ -4,7 +4,7 @@ import math
 import numpy
 from . import subblocked, blocked
 
-class matrix(numpy.ndarray):
+class Matrix(numpy.ndarray):
     """ A subclass of numpy.ndarray for matrix syntax and better printing """
     fmt = "%14.8f"
     order = 'F'
@@ -601,6 +601,7 @@ class matrix(numpy.ndarray):
         """
         return numpy.sum(self.view(numpy.ndarray), **kwargs)
 
+
 def unit(n, factor=1):
     """Return unit matrix, optionally scaled"""
     vec = matrix((n*n,))
@@ -626,8 +627,7 @@ def init(nestlist):
 # init should be generalized with matrix.order, now 'F' assumed -> traspose
 #
 
-#class triangular(numpy.ndarray):
-class triangular(matrix):
+class Triangular(Matrix):
     """Triangular packed matrix class"""
 
     def __new__(cls, shape, anti=False, fmt=None):
@@ -727,3 +727,7 @@ class triangular(matrix):
                 self[i, i] = 0
         return self
 
+
+# Keep non-standard names for back compatibility
+matrix = Matrix
+triangular = Triangular

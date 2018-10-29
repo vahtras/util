@@ -273,7 +273,7 @@ def unit(nbl,factor=1):
          new.subblock[i]=unit(nbl[i],factor)
    return new
 
-class triangular(object):
+class BlockedTriangular(object):
 
    def __init__(self,dim):
       from . import full
@@ -324,3 +324,6 @@ class triangular(object):
         new.subblock = triangular_matrices
         return new
         
+
+# Keep non-standard names for back compatibility
+triangular = BlockedTriangular
