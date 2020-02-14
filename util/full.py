@@ -22,16 +22,16 @@ class Matrix(numpy.ndarray):
         """Output formatting of matrix object, inspired by Dalton OUTPUT
 
         Example:
-        >>> M=matrix((2,2)); M[0,0]=M[1,1]=1; print M
+        >>> M=matrix((2,2)); M[0,0]=M[1,1]=1; print(M)
         <BLANKLINE>
-         (2, 2) 
+         (2, 2)
                       Column   1    Column   2
                1      1.00000000    0.00000000
                2      0.00000000    1.00000000
         <BLANKLINE>
         """
-     
-        retstr = '\n %s \n' % str(self.shape)
+
+        retstr = '\n %s\n' % str(self.shape)
         if len(self.shape) == 1:
             r = self.shape[0]
             columnsperblock = 1
@@ -114,25 +114,23 @@ class Matrix(numpy.ndarray):
         """Matrix multiplication
         Example:
         >>> M = matrix((2,2)); M[0,0]=M[1,1]=2.0; M[0,1]=M[1,0]=1.0
-        >>> print M*M
+        >>> print(M*M)
         <BLANKLINE>
-         (2, 2) 
+         (2, 2)
                       Column   1    Column   2
                1      5.00000000    4.00000000
                2      4.00000000    5.00000000
         <BLANKLINE>
-     
-        >>> print 2*M
+        >>> print(2*M)
         <BLANKLINE>
-         (2, 2) 
+         (2, 2)
                       Column   1    Column   2
                1      4.00000000    2.00000000
                2      2.00000000    4.00000000
         <BLANKLINE>
-     
-        >>> print M*2
+        >>> print(M*2)
         <BLANKLINE>
-         (2, 2) 
+         (2, 2)
                       Column   1    Column   2
                1      4.00000000    2.00000000
                2      2.00000000    4.00000000
@@ -153,25 +151,21 @@ class Matrix(numpy.ndarray):
         >>> v1=matrix((2,))
         >>> v2=matrix((2,))
         >>> v1[0]=v2[1]=1.0
-        >>> print v1
+        >>> print(v1)
         <BLANKLINE>
-         (2,) 
+         (2,)
                       Column   1
                1      1.00000000
         <BLANKLINE>
+        >>> print(v2)
         <BLANKLINE>
-     
-        >>> print v2
-        <BLANKLINE>
-         (2,) 
+         (2,)
                       Column   1
                2      1.00000000
         <BLANKLINE>
+        >>> print(v1.x(v2))
         <BLANKLINE>
-     
-        >>> print v1.x(v2)
-        <BLANKLINE>
-         (2, 2) 
+         (2, 2)
                       Column   1    Column   2
                1      0.00000000    1.00000000
         <BLANKLINE>
@@ -185,9 +179,9 @@ class Matrix(numpy.ndarray):
         Example:
         >>> A=matrix((2,2)).random(); x=matrix((2,1)).random()
         >>> b=A*x
-        >>> print x-b/A
+        >>> print(x-b/A)
         <BLANKLINE>
-         (2, 1) 
+         (2, 1)
                       Column   1
         <BLANKLINE>
         """
@@ -297,8 +291,6 @@ class Matrix(numpy.ndarray):
         cols = list(range(c))
         rows.remove(i)
         cols.remove(j)
-        # bug
-        #print self[rows, cols]
         # do rows and cols separately
         redr = self[rows, :]
         redc = redr[:, cols]

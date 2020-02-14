@@ -37,12 +37,12 @@ class TestBlocked(unittest.TestCase):
         self.assertEqual(str(self.bdm), """
 Block 1
 
- (2, 2) 
+ (2, 2)
               Column   1    Column   2
 
 Block 2
 
- (1, 1) 
+ (1, 1)
               Column   1
 """)
 

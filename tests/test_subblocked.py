@@ -18,22 +18,22 @@ class NewTest(unittest.TestCase):
         self.assertEqual(str(asb), """
 Block (1,1)
 
- (2, 2) 
+ (2, 2)
               Column   1    Column   2
 
 Block (1,2)
 
- (2, 1) 
+ (2, 1)
               Column   1
 
 Block (2,1)
 
- (1, 2) 
+ (1, 2)
               Column   1    Column   2
 
 Block (2,2)
 
- (1, 1) 
+ (1, 1)
               Column   1
 """
         )

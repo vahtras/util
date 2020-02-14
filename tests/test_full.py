@@ -21,7 +21,7 @@ class TestMatrix(unittest.TestCase):
         M[0] = M[1] = 1
         this = str(M)
         ref = """
- (2,) 
+ (2,)
               Column   1
        1      1.00000000
        2      1.00000000
@@ -33,7 +33,7 @@ class TestMatrix(unittest.TestCase):
         M[0, 0] = M[1, 1] = 1
         this = str(M)
         ref = """
- (2, 2) 
+ (2, 2)
               Column   1    Column   2
        1      1.00000000    0.00000000
        2      0.00000000    1.00000000
@@ -46,7 +46,7 @@ class TestMatrix(unittest.TestCase):
             M[i, i] = float(i)
         this = str(M)
         ref = """
- (6, 6) 
+ (6, 6)
               Column   1    Column   2    Column   3    Column   4    Column   5
        2      0.00000000    1.00000000    0.00000000    0.00000000    0.00000000
        3      0.00000000    0.00000000    2.00000000    0.00000000    0.00000000
@@ -63,13 +63,13 @@ class TestMatrix(unittest.TestCase):
         M[0, 0, 0] = M[1, 1, 1] = 1
         this = str(M)
         ref = """
- (2, 2, 2) 
+ (2, 2, 2)
 [0]
- (2, 2) 
+ (2, 2)
               Column   1    Column   2
        1      1.00000000    0.00000000
 [1]
- (2, 2) 
+ (2, 2)
               Column   1    Column   2
        2      0.00000000    1.00000000
 """
@@ -80,19 +80,19 @@ class TestMatrix(unittest.TestCase):
         M[0, 0, 0, 0] = M[1, 1, 1, 1] = 1
         this = str(M)
         ref = """
- (2, 2, 2, 2) 
+ (2, 2, 2, 2)
 [0, 0]
- (2, 2) 
+ (2, 2)
               Column   1    Column   2
        1      1.00000000    0.00000000
 [1, 0]
- (2, 2) 
+ (2, 2)
               Column   1    Column   2
 [0, 1]
- (2, 2) 
+ (2, 2)
               Column   1    Column   2
 [1, 1]
- (2, 2) 
+ (2, 2)
               Column   1    Column   2
        2      0.00000000    1.00000000
 """

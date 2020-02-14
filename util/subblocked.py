@@ -1,8 +1,35 @@
-"""Module with blocked matrix class"""
+"""
+Module with blocked matrix class
+"""
 
 
-class SubBlockedMatrix(object):
-    """Blocked matrix class"""
+class SubBlockedMatrix:
+    """
+    Blocked matrix class
+
+    >>> print(SubBlockedMatrix([2, 1], [2, 1]))
+    <BLANKLINE>
+    Block (1,1)
+    <BLANKLINE>
+     (2, 2)
+                  Column   1    Column   2
+    <BLANKLINE>
+    Block (1,2)
+    <BLANKLINE>
+     (2, 1)
+                  Column   1
+    <BLANKLINE>
+    Block (2,1)
+    <BLANKLINE>
+     (1, 2)
+                  Column   1    Column   2
+    <BLANKLINE>
+    Block (2,2)
+    <BLANKLINE>
+     (1, 1)
+                  Column   1
+    <BLANKLINE>
+    """
     def __init__(self, nrow, ncol):
         """Initialize blocked matrix instance
 
@@ -26,7 +53,9 @@ class SubBlockedMatrix(object):
                 self.subblock[i][j] = full.matrix((nrow[i], ncol[j]))
 
     def __str__(self):
-        """String representation of blocked matrix"""
+        """
+        String representation of blocked matrix
+        """
 
         retstr = ""
         for i in range(self.rowblocks):
@@ -49,7 +78,9 @@ class SubBlockedMatrix(object):
         return new
 
     def __mul__(self, other):
-        """Multiplication of blocked matrices"""
+        """
+        Multiplication of blocked matrices
+        """
 
         new = SubBlockedMatrix(self.nrow, other.ncol)
         for i in range(self.rowblocks):
@@ -61,7 +92,9 @@ class SubBlockedMatrix(object):
         return new
 
     def __add__(self, other):
-        """Multiplication of blocked matrices"""
+        """
+        Addition of blocked matrices
+        """
 
         new = SubBlockedMatrix(self.nrow, other.ncol)
         for i in range(self.rowblocks):
@@ -71,7 +104,9 @@ class SubBlockedMatrix(object):
         return new
 
     def __sub__(self, other):
-        """Multiplication of blocked matrices"""
+        """
+        Subtraction of blocked matrices
+        """
 
         new = SubBlockedMatrix(self.nrow, other.ncol)
         for i in range(self.rowblocks):
@@ -81,13 +116,17 @@ class SubBlockedMatrix(object):
         return new
 
     def random(self):
-        """Fill matrix with random numbers"""
+        """
+        Fill matrix with random numbers
+        """
         for i in range(self.rowblocks):
             for j in range(self.colblocks):
                 self.subblock[i][j].random()
 
     def unblock(self):
-        """Unblock to full matrix"""
+        """
+        Unblock to full matrix
+        """
 
         from . import full
         nrows = sum(self.nrow)
@@ -101,7 +140,5 @@ class SubBlockedMatrix(object):
                     ] = self.subblock[i][j]
         return new
 
-matrix = SubBlockedMatrix
 
-if __name__ == "__main__": #pragma: no cover
-    pass
+matrix = SubBlockedMatrix  # alias for back compatibility
