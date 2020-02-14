@@ -1,7 +1,7 @@
 """Module with blocked matrix class"""
 
 
-class matrix(object):
+class SubBlockedMatrix(object):
     """Blocked matrix class"""
     def __init__(self, nrow, ncol):
         """Initialize blocked matrix instance
@@ -51,13 +51,33 @@ class matrix(object):
     def __mul__(self, other):
         """Multiplication of blocked matrices"""
 
-        new = matrix(self.nrow, other.ncol)
+        new = SubBlockedMatrix(self.nrow, other.ncol)
         for i in range(self.rowblocks):
             for j in range(other.colblocks):
                 if self.nrow[i]*other.ncol[j]:
                     for k in range(self.colblocks):
                         new.subblock[i][j] = \
                             self.subblock[i][k] * other.subblock[k][j]
+        return new
+
+    def __add__(self, other):
+        """Multiplication of blocked matrices"""
+
+        new = SubBlockedMatrix(self.nrow, other.ncol)
+        for i in range(self.rowblocks):
+            for j in range(self.colblocks):
+                new.subblock[i][j] = \
+                    self.subblock[i][j] + other.subblock[i][j]
+        return new
+
+    def __sub__(self, other):
+        """Multiplication of blocked matrices"""
+
+        new = SubBlockedMatrix(self.nrow, other.ncol)
+        for i in range(self.rowblocks):
+            for j in range(self.colblocks):
+                new.subblock[i][j] = \
+                    self.subblock[i][j] - other.subblock[i][j]
         return new
 
     def random(self):
@@ -80,6 +100,8 @@ class matrix(object):
                     self.icol[j]: self.icol[j] + self.ncol[j]
                     ] = self.subblock[i][j]
         return new
+
+matrix = SubBlockedMatrix
 
 if __name__ == "__main__": #pragma: no cover
     pass

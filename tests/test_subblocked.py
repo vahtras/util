@@ -59,6 +59,28 @@ Block (2,2)
         A2 = A*A
         numpy.testing.assert_allclose(A2.subblock[0][0], A2.subblock[0][0])
 
+    def test_add(self):
+        A = SubBlockedMatrix([2, 1], [2, 1])
+        A2 = SubBlockedMatrix([2, 1], [2, 1])
+        A.subblock[0][0][:, :] = [[1., 0.], [0., 1.]]
+        A.subblock[1][1][:, :] = 1.0
+        A2.subblock[0][0][:, :] = [[2., 0.], [0., 2.]]
+        A2.subblock[1][1][:, :] = 2.0
+
+        for i in range(2):
+            for j in range(2):
+                numpy.testing.assert_allclose((A+A).subblock[i][j], A2.subblock[i][j])
+
+    def test_sub(self):
+        A = SubBlockedMatrix([2, 1], [2, 1])
+        A2 = SubBlockedMatrix([2, 1], [2, 1])
+        A.subblock[0][0][:, :] = [[1., 0.], [0., 1.]]
+        A.subblock[1][1][:, :] = 1.0
+
+        for i in range(2):
+            for j in range(2):
+                numpy.testing.assert_allclose((A-A).subblock[i][j], A2.subblock[i][j])
+
     def test_random(self):
         A = SubBlockedMatrix([2], [2])
         numpy.random.seed(0)
