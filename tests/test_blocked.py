@@ -1,12 +1,9 @@
 import unittest
-try:
-    import mock
-except ImportError: # pragma: no cover
-    from unittest import mock
+from unittest import mock
 import numpy
 import math
 from .context import util
-from util.blocked import *
+from util.blocked import BlockDiagonalMatrix, unit, triangular
 from util.full import init
 
 class TestBlocked(unittest.TestCase):
