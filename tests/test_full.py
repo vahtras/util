@@ -1,7 +1,6 @@
 import unittest
 import numpy as np
 from math import sqrt, cos, exp, pi
-from .context import util
 from util.full import matrix, init, unit, permute, triangular
 
 class TestMatrix(unittest.TestCase):
@@ -303,7 +302,7 @@ class TestMatrix(unittest.TestCase):
     def test_funcsqrt(self):
         Delta = 0.1
         S = init([[1.0, Delta], [Delta, 1.0]])
-        Sh = S.func(sqrt)
+        Sh = S.func(np.sqrt)
         np.testing.assert_almost_equal(Sh*Sh, S)
 
     def test_exp(self):

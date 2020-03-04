@@ -370,6 +370,10 @@ class Matrix(numpy.ndarray):
           
     def sqrt(self):
         """Return square root of matrix"""
+        return self.func(numpy.sqrt)
+
+    def _sqrt(self):
+        """Return square root of matrix"""
         from scipy.linalg import sqrtm
         return sqrtm(self).real.view(matrix)
 
@@ -386,13 +390,9 @@ class Matrix(numpy.ndarray):
     def func(self, f):
         """General function of matrix"""
         val, vec = numpy.linalg.eig(self)
-        fval = val.view(matrix)
-        n = len(val)
-        new = matrix((n, n))
-        for i in range(n):
-            fval[i] = f(val[i])
-            new[i, i] = fval[i]
-        return vec*new*vec.inv()
+        fval = f(val)
+        fself = (vec * fval) @ vec.inv()
+        return fself
 
 
     def exp(self):

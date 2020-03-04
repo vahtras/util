@@ -164,7 +164,7 @@ Block 2
     def test_func(self):
         self.bdm[0][:, :] = [[1, 0], [0, 16]]
         self.bdm[1][:, :] = [[25]]
-        self.assert_allclose(self.bdm.func(math.sqrt), [[[1, 0], [0, 4]], [[5]]])
+        self.assert_allclose(self.bdm.func(numpy.sqrt), [[[1, 0], [0, 4]], [[5]]])
 
     @mock.patch.object(numpy.random, 'random')
     def test_blocked_random(self, mock_random):
