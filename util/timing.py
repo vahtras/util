@@ -1,7 +1,7 @@
 import time
 
 
-class timing:
+class Timing:
     def __init__(self, info):
         self.info = info
         self.t0 = time.perf_counter()
@@ -21,3 +21,6 @@ class timing:
     def stop(self):
         self.t1 = time.perf_counter()
         self.w1 = time.time()
+
+
+timing = Timing

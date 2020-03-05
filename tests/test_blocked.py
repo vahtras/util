@@ -1,13 +1,14 @@
+import math
 import unittest
 from unittest import mock
+
 import numpy
-import math
-from .context import util
+
 from util.blocked import BlockDiagonalMatrix, unit, triangular
 from util.full import init
 
-class TestBlocked(unittest.TestCase):
 
+class TestBlocked(unittest.TestCase):
     def setUp(self):
         self.bdm = BlockDiagonalMatrix((2, 1), (2, 1))
 
@@ -34,7 +35,9 @@ class TestBlocked(unittest.TestCase):
         self.assertRaises(AssertionError, BlockDiagonalMatrix, (1, 2), (3,))
 
     def test_str(self):
-        self.assertEqual(str(self.bdm), """
+        self.assertEqual(
+            str(self.bdm),
+            """
 Block 1
 
  (2, 2)
@@ -44,8 +47,8 @@ Block 2
 
  (1, 1)
               Column   1
-""")
-
+""",
+        )
 
     def test_init(self):
         self.bdm[0][:, :] = [[1, 3], [2, 4]]
@@ -54,12 +57,9 @@ Block 2
         numpy.testing.assert_allclose(bdm.subblock[0], self.bdm.subblock[0])
         numpy.testing.assert_allclose(bdm.subblock[1], self.bdm.subblock[1])
 
-
     def test_init_from_array_dimension_error(self):
         with self.assertRaises(AssertionError):
-            bdm = BlockDiagonalMatrix.init_from_array(
-                [1, 2, 3], (2, 1), (2, 1)
-                )
+            BlockDiagonalMatrix.init_from_array([1, 2, 3], (2, 1), (2, 1))
 
     def test_init_from_array(self):
         self.bdm[0][:, :] = [[0, 2], [1, 3]]
@@ -70,8 +70,7 @@ Block 2
 
     def test_blocked_ravel(self):
         bdm = BlockDiagonalMatrix.init_from_array(range(5), (2, 1), (2, 1))
-        numpy.testing.assert_allclose(bdm.ravel(order='F'), range(5))
-        
+        numpy.testing.assert_allclose(bdm.ravel(order="F"), range(5))
 
     def test_unblock(self):
         blocked = BlockDiagonalMatrix((2, 1), (2, 1))
@@ -87,7 +86,6 @@ Block 2
         packed = [[1, 2, 1], [5]]
         blocked_packed = blocked.pack()
         self.assert_allclose(blocked_packed.subblock, packed)
-        
 
     def test_unit(self):
         ref = [[[1, 0], [0, 1]], [[1]]]
@@ -97,12 +95,12 @@ Block 2
     def test_mul(self):
         self.bdm[0][:, :] = [[0, 1], [2, 3]]
         self.bdm[1][:, :] = [[2]]
-        self.assert_allclose(self.bdm*self.bdm, [[[2, 3], [6, 11]], [[4]]])
+        self.assert_allclose(self.bdm * self.bdm, [[[2, 3], [6, 11]], [[4]]])
 
     def test_rmul(self):
         self.bdm[0][:, :] = [[0, 1], [2, 3]]
         self.bdm[1][:, :] = [[2]]
-        self.assert_allclose(2*self.bdm, [[[0, 2], [4, 6]], [[4]]])
+        self.assert_allclose(2 * self.bdm, [[[0, 2], [4, 6]], [[4]]])
 
     def test_add(self):
         self.bdm[0][:, :] = [[0, 1], [2, 3]]
@@ -122,17 +120,17 @@ Block 2
     def test_div(self):
         self.bdm[0][:, :] = [[0, 1], [2, 3]]
         self.bdm[1][:, :] = [[2]]
-        self.assert_allclose(self.bdm/self.bdm, [[[1, 0], [0, 1]], [[1]]])
+        self.assert_allclose(self.bdm / self.bdm, [[[1, 0], [0, 1]], [[1]]])
 
     def test_scalar_div(self):
         self.bdm[0][:, :] = [[0, 1], [2, 3]]
         self.bdm[1][:, :] = [[2]]
-        self.assert_allclose(self.bdm/2, [[[0, .5], [1, 1.5]], [[1]]])
+        self.assert_allclose(self.bdm / 2, [[[0, 0.5], [1, 1.5]], [[1]]])
 
     def test_rdiv(self):
         self.bdm[0][:, :] = [[0, 1], [2, 3]]
         self.bdm[1][:, :] = [[2]]
-        self.assert_allclose(1/self.bdm, [[[-1.5, 0.5], [1, 0]], [[0.5]]])
+        self.assert_allclose(1 / self.bdm, [[[-1.5, 0.5], [1, 0]], [[0.5]]])
 
     def test_sqrt(self):
         self.bdm[0][:, :] = [[4, 0], [0, 4]]
@@ -142,7 +140,9 @@ Block 2
     def test_isqrt(self):
         self.bdm[0][:, :] = [[4, 0], [0, 4]]
         self.bdm[1][:, :] = [[9]]
-        self.assert_allclose(self.bdm.invsqrt(), [[[.5, 0], [0, .5]], [[1./3]]])
+        self.assert_allclose(
+            self.bdm.invsqrt(), [[[0.5, 0], [0, 0.5]], [[1.0 / 3]]]
+        )
 
     def test_eigvec(self):
         self.bdm[0][:, :] = [[4, 0], [0, 4]]
@@ -164,11 +164,13 @@ Block 2
     def test_func(self):
         self.bdm[0][:, :] = [[1, 0], [0, 16]]
         self.bdm[1][:, :] = [[25]]
-        self.assert_allclose(self.bdm.func(numpy.sqrt), [[[1, 0], [0, 4]], [[5]]])
+        self.assert_allclose(
+            self.bdm.func(numpy.sqrt), [[[1, 0], [0, 4]], [[5]]]
+        )
 
-    @mock.patch.object(numpy.random, 'random')
+    @mock.patch.object(numpy.random, "random")
     def test_blocked_random(self, mock_random):
-        M = BlockDiagonalMatrix([2], [2]).random()
+        BlockDiagonalMatrix([2], [2]).random()
         self.assertTrue(mock_random.calls, 2)
 
     def test_tr(self):
@@ -182,17 +184,25 @@ Block 2
         A = BlockDiagonalMatrix([3], [3])
         A.subblock[0] = init([[12, 6, -4], [-51, 167, 24], [4, -68, -41]])
         Q, R = A.qr()
-        numpy.testing.assert_almost_equal(Q[0], 
-            -init([[6./7, 3./7, -2./7], [-69./175, 158./175, 6./35], [-58./175, 6./175, -33./35]])
-            )
+        numpy.testing.assert_almost_equal(
+            Q[0],
+            -init(
+                [
+                    [6.0 / 7, 3.0 / 7, -2.0 / 7],
+                    [-69.0 / 175, 158.0 / 175, 6.0 / 35],
+                    [-58.0 / 175, 6.0 / 175, -33.0 / 35],
+                ]
+            ),
+        )
+
     def test_qr_R(self):
         A = BlockDiagonalMatrix([3], [3])
         A.subblock[0] = init([[12, 6, -4], [-51, 167, 24], [4, -68, -41]])
         Q, R = A[0].qr()
-        numpy.testing.assert_almost_equal(R, 
-            -init([[14, 0, 0], [21, 175, 0], [-14, -70, 35]])
-            )
-        numpy.testing.assert_almost_equal(A[0], Q*R)
+        numpy.testing.assert_almost_equal(
+            R, -init([[14, 0, 0], [21, 175, 0], [-14, -70, 35]])
+        )
+        numpy.testing.assert_almost_equal(A[0], Q * R)
 
     def test_gram_schmidt(self):
         S = BlockDiagonalMatrix([2], [2])
@@ -201,11 +211,19 @@ Block 2
         S.subblock[0] = init([[1.0, Delta], [Delta, 1.0]])
         v.subblock[0] = init([[1.0, 0.0], [0.0, 1.0]])
         u = v.GS(S)
-        u_ref = init([[1.0, 0.0], [-Delta/math.sqrt(1-Delta**2), 1.0/math.sqrt(1-Delta**2)]])
+        u_ref = init(
+            [
+                [1.0, 0.0],
+                [
+                    -Delta/math.sqrt(1 - Delta**2),
+                    1.0/math.sqrt(1 - Delta**2)
+                ],
+            ]
+        )
         numpy.testing.assert_almost_equal(u[0], u_ref)
-        
-class BlockedTriangularTest(unittest.TestCase):
 
+
+class BlockedTriangularTest(unittest.TestCase):
     def setUp(self):
         pass
 
@@ -214,7 +232,9 @@ class BlockedTriangularTest(unittest.TestCase):
 
     def test_str(self):
         bt = triangular((2, 1))
-        self.assertEqual(str(bt), """
+        self.assertEqual(
+            str(bt),
+            """
 Block 1
 
     0.00000000
@@ -223,42 +243,53 @@ Block 1
 Block 2
 
     0.00000000
-"""
-        ) 
+""",
+        )
 
     def test_init(self):
-        bt = triangular.init([[1., 2., 3.], [4.]])
-        numpy.testing.assert_almost_equal(numpy.array(bt.subblock[0]), [1., 2., 3.])
-        numpy.testing.assert_almost_equal(numpy.array(bt.subblock[1]), [4.])
+        bt = triangular.init([[1.0, 2.0, 3.0], [4.0]])
+        numpy.testing.assert_almost_equal(
+            numpy.array(bt.subblock[0]),
+            [1.0, 2.0, 3.0]
+        )
+        numpy.testing.assert_almost_equal(
+            numpy.array(bt.subblock[1]), [4.0]
+        )
 
-    @mock.patch.object(numpy.random, 'random')
+    @mock.patch.object(numpy.random, "random")
     def test_blocked_random(self, mock_random):
-        M = triangular([3, 2]).random()
+        triangular([3, 2]).random()
         self.assertTrue(mock_random.calls, 2)
-        
+
     def test_add(self):
-        bt = triangular.init([[1., 2., 3.], [4.]])
+        bt = triangular.init([[1.0, 2.0, 3.0], [4.0]])
         bt = bt + bt
-        numpy.testing.assert_almost_equal(numpy.array(bt.subblock[0]), [2., 4., 6.])
-        numpy.testing.assert_almost_equal(numpy.array(bt.subblock[1]), [8.])
+        numpy.testing.assert_almost_equal(
+            numpy.array(bt.subblock[0]), [2.0, 4.0, 6.0]
+        )
+        numpy.testing.assert_almost_equal(
+            numpy.array(bt.subblock[1]), [8.0]
+        )
 
     def test_sub(self):
-        bt = triangular.init([[1., 2., 3.], [4.]])
+        bt = triangular.init([[1.0, 2.0, 3.0], [4.0]])
         bt = bt - bt
-        numpy.testing.assert_almost_equal(numpy.array(bt.subblock[0]), [0., 0., 0.])
-        numpy.testing.assert_almost_equal(numpy.array(bt.subblock[1]), [0.])
+        numpy.testing.assert_almost_equal(
+            numpy.array(bt.subblock[0]), [0.0, 0.0, 0.0]
+        )
+        numpy.testing.assert_almost_equal(
+            numpy.array(bt.subblock[1]), [0.0]
+        )
 
     def test_unpack(self):
-        bt = triangular.init([[1., 2., 3.], [4.]])
+        bt = triangular.init([[1.0, 2.0, 3.0], [4.0]])
         ubt = bt.unpack()
         numpy.testing.assert_almost_equal(ubt.subblock[0], [[1, 2], [2, 3]])
         numpy.testing.assert_almost_equal(ubt.subblock[1], [[4]])
 
     def test_unblock(self):
-        bt = triangular.init([[1., 2., 3.], [4.]])
+        bt = triangular.init([[1.0, 2.0, 3.0], [4.0]])
         ubl = bt.unblock()
-        numpy.testing.assert_almost_equal(numpy.array(ubl), [1., 2., 3., 0., 0., 4.])
-
-
-if __name__ == "__main__": # pragma: no cover
-    unittest.main()
+        numpy.testing.assert_almost_equal(
+            numpy.array(ubl), [1.0, 2.0, 3.0, 0.0, 0.0, 4.0]
+        )

@@ -30,6 +30,7 @@ class SubBlockedMatrix:
                   Column   1
     <BLANKLINE>
     """
+
     def __init__(self, nrow, ncol):
         """Initialize blocked matrix instance
 
@@ -37,6 +38,7 @@ class SubBlockedMatrix:
         ncol: integer tuple, blocked column dimension
         """
         from . import full
+
         self.rowblocks = len(nrow)
         self.colblocks = len(ncol)
         self.nrow = nrow
@@ -60,8 +62,9 @@ class SubBlockedMatrix:
         retstr = ""
         for i in range(self.rowblocks):
             for j in range(self.colblocks):
-                retstr += "\nBlock (%d,%d)\n" % (i+1, j+1) + \
-                    str(self.subblock[i][j])
+                retstr += "\nBlock (%d,%d)\n" % (i + 1, j + 1) + str(
+                    self.subblock[i][j]
+                )
         return retstr
 
     def __getitem__(self, args):
@@ -85,10 +88,9 @@ class SubBlockedMatrix:
         new = SubBlockedMatrix(self.nrow, other.ncol)
         for i in range(self.rowblocks):
             for j in range(other.colblocks):
-                if self.nrow[i]*other.ncol[j]:
+                if self.nrow[i] * other.ncol[j]:
                     for k in range(self.colblocks):
-                        new.subblock[i][j] = \
-                            self.subblock[i][k] * other.subblock[k][j]
+                        new.subblock[i][j] = self.subblock[i][k] * other.subblock[k][j]
         return new
 
     def __add__(self, other):
@@ -99,8 +101,7 @@ class SubBlockedMatrix:
         new = SubBlockedMatrix(self.nrow, other.ncol)
         for i in range(self.rowblocks):
             for j in range(self.colblocks):
-                new.subblock[i][j] = \
-                    self.subblock[i][j] + other.subblock[i][j]
+                new.subblock[i][j] = self.subblock[i][j] + other.subblock[i][j]
         return new
 
     def __sub__(self, other):
@@ -111,8 +112,7 @@ class SubBlockedMatrix:
         new = SubBlockedMatrix(self.nrow, other.ncol)
         for i in range(self.rowblocks):
             for j in range(self.colblocks):
-                new.subblock[i][j] = \
-                    self.subblock[i][j] - other.subblock[i][j]
+                new.subblock[i][j] = self.subblock[i][j] - other.subblock[i][j]
         return new
 
     def random(self):
@@ -129,6 +129,7 @@ class SubBlockedMatrix:
         """
 
         from . import full
+
         nrows = sum(self.nrow)
         ncols = sum(self.ncol)
         new = full.matrix((nrows, ncols))
@@ -136,8 +137,8 @@ class SubBlockedMatrix:
             for j in range(self.colblocks):
                 new[
                     self.irow[i]: self.irow[i] + self.nrow[i],
-                    self.icol[j]: self.icol[j] + self.ncol[j]
-                    ] = self.subblock[i][j]
+                    self.icol[j]: self.icol[j] + self.ncol[j],
+                ] = self.subblock[i][j]
         return new
 
 
