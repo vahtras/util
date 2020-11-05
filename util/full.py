@@ -401,7 +401,7 @@ class Matrix(numpy.ndarray):
 
     def invsqrt(self):
         """Return inverse square root of matrix"""
-        return self.I.sqrt()
+        return self.funch(lambda λ: λ ** (-0.5))
 
     @staticmethod
     def diag(vec):
