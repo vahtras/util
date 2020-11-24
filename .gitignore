@@ -4,6 +4,7 @@
 .cache
 cover
 htmlcov
+.venv*
 venv*
 /build
 /dist
@@ -12,3 +13,4 @@ venv*
 *.log
 .python-version
 .hypothesis
+.tox
