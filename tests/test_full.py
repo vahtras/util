@@ -278,9 +278,9 @@ class TestMatrix(unittest.TestCase):
         np.testing.assert_almost_equal(M.eig(), [-1.0, 1.0])
 
     def test_eigvec(self):
-        M = init([[0, 1], [1, 0]])
+        M = init([[0., 1], [1, 0.]])
         np.testing.assert_almost_equal(
-            sqrt(2) * M.eigvec()[1], [[-1.0, 1.0], [1.0, 1.0]]
+            sqrt(2) * M.eigvec()[1], [[1.0, 1.0], [-1.0, 1.0]]
         )
 
     def test_qr_Q(self):
@@ -515,4 +515,22 @@ class TestMatrix(unittest.TestCase):
         np.testing.assert_equal(
             permute([0, 2], 4),
             [[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]],
+        )
+
+    def test_rephase_copy(self):
+        mat = init([[-1, 0], [0, 1]])
+        mat2 = mat.rephase_columns()
+        np.testing.assert_allclose(
+            mat2,
+            [[1, 0], [0, 1]],
+        )
+
+    def test_rephase_inplase(self):
+        mat = init([[-1, 0], [0, 1]])
+        none = mat.rephase_columns(inplace=True)
+
+        assert none is None
+        np.testing.assert_allclose(
+            init([[-1, 0], [0, 1]]).rephase_columns(),
+            init([[1, 0], [0, 1]])
         )

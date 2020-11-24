@@ -4,6 +4,7 @@ Matrix utility module based on numpy
 
 import math
 import numpy
+import scipy.linalg
 from . import subblocked, blocked
 
 
@@ -322,25 +323,43 @@ class Matrix(numpy.ndarray):
                 new[i, j] = (-1) ** (i + j) * self.minor(i, j).det()
         return new
 
-    def eig(self):
+    def eig(self, S=None):
         """
         Return sorted eigenvalues as a column matrix
         """
-        eigvals = numpy.linalg.eigvals(self)
+        eigvals = scipy.linalg.eigvalsh(self, S)
         p = eigvals.argsort()
         return eigvals[p].view(matrix)
 
-    def eigvec(self):
+    def eigvec(self, S=None):
         """
         Return eigenvalue/eigenvector pair, sorted
         by eigenvalue
         """
-        U, V = numpy.linalg.eig(self)
+        U, V = scipy.linalg.eigh(self, S)
         p = U.argsort()
         #
         # Note that eig returns U as ndarray but V as its subclass
         #
+        V.view(Matrix).rephase_columns()
         return U[p].view(matrix), V[:, p]
+
+    def rephase_columns(self, inplace=False):
+        """
+        Set the phase of each column so that its largest component is positive
+        """
+        if not inplace:
+            initial = self[...]
+        else:
+            initial = self
+
+        for column in initial.T:
+            ind = numpy.argmax(abs(column))
+            if column[ind] < 0:
+                column *= -1
+
+        if not inplace:
+            return initial
 
     def qr(self):
         """

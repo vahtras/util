@@ -10,5 +10,5 @@ setup(
     description="NumPy wrappers for blocked matrices",
     url="https://github.com/vahtras/util",
     packages=["util"],
-    install_requires=["numpy"],
+    install_requires=["scipy"],
 )
