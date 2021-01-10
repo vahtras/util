@@ -15,6 +15,7 @@ class Matrix(numpy.ndarray):
 
     fmt = "%14.8f"
     order = "F"
+    columnsperblock = 5
 
     def __new__(cls, shape, fmt=None):
         """
@@ -64,7 +65,7 @@ class Matrix(numpy.ndarray):
                         retstr += "\n"
         elif len(self.shape) == 2:
             r, c = self.shape
-            columnsperblock = 5
+            columnsperblock = self.columnsperblock
             fullblocks = c // columnsperblock
             trailblock = c % 5
             for b in range(fullblocks):
@@ -374,7 +375,7 @@ class Matrix(numpy.ndarray):
         if S is None:
             norm = 1 / math.sqrt(self & self)
         else:
-            norm = 1 / math.sqrt(self & (S * self))
+            norm = 1 / math.sqrt(self & (S @ self))
         self *= norm
 
     def GS(self, S, T=False):
@@ -384,9 +385,12 @@ class Matrix(numpy.ndarray):
         new[:, 0] = self[:, 0]
         new[:, 0].normalize(S)
         for i in range(1, c):
-            P = new[:, :i] * new[:, :i].T * S
-            new[:, i] = self[:, i] - P * self[:, i]
-            new[:, i].normalize(S)
+            P = new[:, :i] @ new[:, :i].T @ S
+            new[:, i] = self[:, i] - P @ self[:, i]
+            try:
+                new[:, i].normalize(S)
+            except ZeroDivisionError:
+                print("Warning: zero vector in GS, ignored")
         #
         # relation new=self*T
         #          self.T*new=self.T*self*T
