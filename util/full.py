@@ -191,6 +191,9 @@ class Matrix(numpy.ndarray):
         c = numpy.outer(self, other).reshape(self.shape + other.shape)
         return c.view(matrix)
 
+    def solve(self, other):
+        return numpy.linalg.solve(self, other)
+
     def __truediv__(self, other):
         """Solution of linear equation/inversion
         Example:
