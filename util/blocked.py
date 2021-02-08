@@ -1,7 +1,7 @@
 import numpy
 
 
-class BlockDiagonalMatrix(object):
+class BlockDiagonalMatrix:
     """
     Blocked matrix class based on lists of full matrices
     """
@@ -33,6 +33,9 @@ class BlockDiagonalMatrix(object):
             if self.nrow[i] * self.ncol[i]:
                 retstr += "\nBlock %d\n" % (i + 1) + str(self.subblock[i])
         return retstr
+
+    def __repr__(self):
+        return f'BlockDiagonalMatrix({self.nrow}, {self.ncol})'
 
     def __getitem__(self, n):
         """ Index argument returns subblock
@@ -151,23 +154,31 @@ class BlockDiagonalMatrix(object):
         return new
 
     def __truediv__(self, other):
+        "Scalar division"
+
+        new = BlockDiagonalMatrix(self.nrow, self.ncol)
+        for i in range(self.nblocks):
+            new.subblock[i] = self.subblock[i] * (1 / other)
+        return new
+
+    def __rtruediv__(self, other):
+        "Reverse Scalar division"
+
+        new = BlockDiagonalMatrix(self.nrow, self.ncol)
+        for i in range(self.nblocks):
+            new.subblock[i] = other / self.subblock[i]
+        return new
+
+    def solve(self, other):
         "Solve linear equations blockwise" ""
 
         new = BlockDiagonalMatrix(self.nrow, self.ncol)
         for i in range(self.nblocks):
             if self.nrow[i]:
-                if isinstance(other, self.__class__):
-                    new.subblock[i] = other.subblock[i].solve(self.subblock[i])
-                else:
-                    new.subblock[i] = self.subblock[i] / other
+                new.subblock[i] = self.subblock[i].solve(
+                    other.subblock[i]
+                )
         return new
-
-    def __rtruediv__(self, other):
-        """Inversion """
-        return unit(self.nrow, other) / self
-
-    def __rdiv__(self, other):
-        return self.__rtruediv__(other)
 
     def pack(self):
         for i in range(self.nblocks):

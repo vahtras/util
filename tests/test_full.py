@@ -1,5 +1,6 @@
 from math import sqrt, exp, pi
 import unittest
+import pytest
 
 import numpy as np
 
@@ -7,6 +8,7 @@ from util.full import Matrix, init, unit, permute, triangular
 
 
 class TestMatrix(unittest.TestCase):
+
     def test_diag(self):
         ref = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
         this = Matrix.diag([1, 1, 1])
@@ -139,7 +141,7 @@ class TestMatrix(unittest.TestCase):
         M[0, 1] = 2
         M[1, 0] = 3
         M[1, 1] = 4
-        np.testing.assert_almost_equal(M / M, [[1.0, 0.0], [0.0, 1.0]])
+        np.testing.assert_almost_equal(M.solve(M), [[1.0, 0.0], [0.0, 1.0]])
 
     def test_neg(self):
         M = Matrix((2, 2))
@@ -242,10 +244,6 @@ class TestMatrix(unittest.TestCase):
         M.inv()
         np.testing.assert_almost_equal(M._I, [[0.3, 0.1], [0.1, -0.3]])
 
-    def test_rdiv(self):
-        M = init([[3.0, 1.0], [1.0, -3.0]])
-        np.testing.assert_almost_equal(1 / M, [[0.3, 0.1], [0.1, -0.3]])
-
     def test_det(self):
         M = init([[3, 1], [1, -3]])
         self.assertAlmostEqual(M.det(), -10)
@@ -267,7 +265,7 @@ class TestMatrix(unittest.TestCase):
 
     def test_cofactor_inverse(self):
         M = init([[4, 1], [1, 3]])
-        np.testing.assert_allclose(M.inv(), M.cofactor().T / M.det())
+        np.testing.assert_allclose(M.inv(), M.cofactor().T * (1/M.det()))
 
     def test_cofactor_1by1(self):
         M = init([[3.0]])
@@ -377,7 +375,7 @@ class TestMatrix(unittest.TestCase):
 
     def test_mul_triangluar(self):
         A = triangular.init([1, 2, 3])
-        np.testing.assert_allclose(A * A, [[5, 8], [8, 13]])
+        np.testing.assert_allclose(A @ A, [[5, 8], [8, 13]])
 
     def test_scalar_mul_triangluar(self):
         A = triangular.init([1, 2, 3])

@@ -3,6 +3,7 @@ import unittest
 from unittest import mock
 
 import numpy
+import pytest
 
 from util.blocked import BlockDiagonalMatrix, unit, triangular
 from util.full import init
@@ -49,6 +50,9 @@ Block 2
               Column   1
 """,
         )
+
+    def test_repr(self):
+        assert repr(self.bdm) == 'BlockDiagonalMatrix((2, 1), (2, 1))'
 
     def test_init(self):
         self.bdm[0][:, :] = [[1, 3], [2, 4]]
@@ -117,20 +121,21 @@ Block 2
         self.bdm[1][:, :] = [[2]]
         self.assert_allclose(-self.bdm, [[[0, -1], [-2, -3]], [[-2]]])
 
-    def test_div(self):
+    def test_solve(self):
         self.bdm[0][:, :] = [[0, 1], [2, 3]]
         self.bdm[1][:, :] = [[2]]
-        self.assert_allclose(self.bdm / self.bdm, [[[1, 0], [0, 1]], [[1]]])
+        self.assert_allclose(self.bdm.solve(self.bdm), [[[1, 0], [0, 1]], [[1]]])
 
     def test_scalar_div(self):
         self.bdm[0][:, :] = [[0, 1], [2, 3]]
         self.bdm[1][:, :] = [[2]]
         self.assert_allclose(self.bdm / 2, [[[0, 0.5], [1, 1.5]], [[1]]])
 
+    # @pytest.mark.skip('enable later')
     def test_rdiv(self):
-        self.bdm[0][:, :] = [[0, 1], [2, 3]]
-        self.bdm[1][:, :] = [[2]]
-        self.assert_allclose(1 / self.bdm, [[[-1.5, 0.5], [1, 0]], [[0.5]]])
+        self.bdm[0][:, :] = [[1, 2], [4, 8]]
+        self.bdm[1][:, :] = [[.5]]
+        self.assert_allclose(1 / self.bdm, [[[1, 0.5], [.25, .125]], [[2.0]]])
 
     def test_sqrt(self):
         self.bdm[0][:, :] = [[4, 0], [0, 4]]

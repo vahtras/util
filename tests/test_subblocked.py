@@ -1,6 +1,7 @@
 import unittest
 
 import numpy
+import pytest
 
 from util.subblocked import matrix as SubBlockedMatrix
 
@@ -52,12 +53,20 @@ Block (2,2)
         AT = A.T()
         numpy.testing.assert_allclose(AT.subblock[1][0], [[1.0], [2.0]])
 
+    def test_matmul(self):
+        A = SubBlockedMatrix([2, 1], [2, 1])
+        A.subblock[0][0][:, :] = [[1.0, 0.0], [0.0, 1.0]]
+        A.subblock[1][1][:, :] = 1.0
+
+        A2 = A @ A
+        numpy.testing.assert_allclose(A2.subblock[0][0], A2.subblock[0][0])
+
     def test_mul(self):
         A = SubBlockedMatrix([2, 1], [2, 1])
         A.subblock[0][0][:, :] = [[1.0, 0.0], [0.0, 1.0]]
         A.subblock[1][1][:, :] = 1.0
 
-        A2 = A * A
+        A2 = A * 2
         numpy.testing.assert_allclose(A2.subblock[0][0], A2.subblock[0][0])
 
     def test_add(self):

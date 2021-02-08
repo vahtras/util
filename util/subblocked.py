@@ -82,6 +82,27 @@ class SubBlockedMatrix:
 
     def __mul__(self, other):
         """
+        Scalar multiplication
+        """
+        bdm = self.__class__(self.nrow, self.ncol)
+        for row in bdm.subblock:
+            for block in row:
+                block *= other
+        return bdm
+
+    def __nextmul__(self, other):
+        """
+        Addition of blocked matrices
+        """
+
+        new = SubBlockedMatrix(self.nrow, other.ncol)
+        for i in range(self.rowblocks):
+            for j in range(self.colblocks):
+                new.subblock[i][j] = self.subblock[i][j] + other.subblock[i][j]
+        return new
+
+    def __matmul__(self, other):
+        """
         Multiplication of blocked matrices
         """
 
@@ -90,7 +111,7 @@ class SubBlockedMatrix:
             for j in range(other.colblocks):
                 if self.nrow[i] * other.ncol[j]:
                     for k in range(self.colblocks):
-                        new.subblock[i][j] = self.subblock[i][k] * other.subblock[k][j]
+                        new.subblock[i][j] = self.subblock[i][k] @ other.subblock[k][j]
         return new
 
     def __add__(self, other):

@@ -68,7 +68,7 @@ class TestTriangular(unittest.TestCase):
 
     def test_mul(self):
         npt.assert_equal(
-            self.twodim * self.twodim, [[5.0, 8.0], [8.0, 13.0]]
+            self.twodim @ self.twodim, [[5.0, 8.0], [8.0, 13.0]]
         )
 
     def test_mul_scalar(self):

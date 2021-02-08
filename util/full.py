@@ -195,7 +195,7 @@ class Matrix(numpy.ndarray):
     def solve(self, other):
         return numpy.linalg.solve(self, other)
 
-    def __truediv__(self, other):
+    def __truediv__to_be_removed(self, other):
         """Solution of linear equation/inversion
         Example:
         >>> A=matrix((2,2)).random(); x=matrix((2,1)).random()
@@ -206,6 +206,8 @@ class Matrix(numpy.ndarray):
                       Column   1
         <BLANKLINE>
         """
+
+        raise DeprecationWarning
 
         if isinstance(other, self.__class__) or self.is_sibling(other):
             new = numpy.linalg.solve(other, self)
@@ -281,20 +283,14 @@ class Matrix(numpy.ndarray):
     def inv(self):
         """Matrix inverse"""
         if self._I is None:
-            r, c = self.shape
-            assert r == c
-            self._I = unit(r) / self
+            self._I = numpy.linalg.inv(self)
         return self._I
 
     I = property(fget=inv)
 
-    def __rtruediv__(self, other):
+    def __rtruediv__rem(self, other):
         """Division with Matrix instance in denominator"""
-        r, _ = self.shape
-        return unit(r, other) / self
-
-    def __rdiv__(self, other):
-        return self.__rtruediv__(other)
+        return other / self
 
     def tr(self):
         """Trace"""
@@ -449,19 +445,23 @@ class Matrix(numpy.ndarray):
         fself = (vec * fval) @ vec.T
         return fself
 
-    def exp(self):
-        """Exponential of matrix"""
-        r, _ = self.shape
-        new = unit(r)
-        termnorm = new & new
-        term = new * 1
+    def exp(self, threshold=1e-8):
+        """
+        Evaluates the exponential of matrix
+        by Taylor expansion, with an optional cut-off threshold
+        default 1e-8
+        """
+        rdim, _ = self.shape
+
+        term = unit(rdim)
+        taylor_sum = term
+
         i = 0
-        while termnorm > 1e-8:
+        while term.norm2() > threshold:
             i = i + 1
-            term *= self / i
-            new += term
-            termnorm = math.sqrt(term & term)
-        return new
+            term = term @ self * (1.0 / i)
+            taylor_sum += term
+        return taylor_sum
 
     def random(self):
         """Fill myself with random numbers"""
@@ -604,7 +604,7 @@ class Matrix(numpy.ndarray):
     def rot(self, angle, vec, origin=None):
         """Rotate self by an angle around vec"""
 
-        p = vec[:] / vec.norm2()
+        p = vec[:] * (1.0 / vec.norm2())
         if origin is None:
             so = self
         else:
@@ -682,7 +682,9 @@ def init(nestlist):
 
 
 class Triangular(Matrix):
-    """Triangular packed matrix class"""
+    """
+    Triangular packed matrix class
+    """
 
     def __new__(cls, shape, anti=False, fmt=None):
         tshape = ((shape[0] * (shape[0] + 1)) // 2,)
@@ -765,12 +767,11 @@ class Triangular(Matrix):
                     new[j, i] = self[i, j]
         return new
 
-    def __mul__(self, other):
-        """Multiplication of triangular matrices, return square"""
-        if isinstance(other, self.__class__):
-            return self.unpack() @ other.unpack()
-        else:
-            return other * self
+    def __matmul__(self, other):
+        """
+        Multiplication of triangular matrices, return square
+        """
+        return self.unpack() @ other.unpack()
 
     def random(self):
         """Triangular random matrix"""
