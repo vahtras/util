@@ -1,13 +1,12 @@
 from math import sqrt, exp, pi
-import unittest
-import pytest
+from pytest import approx
 
 import numpy as np
 
 from util.full import Matrix, init, unit, permute, triangular
 
 
-class TestMatrix(unittest.TestCase):
+class TestMatrix:
 
     def test_diag(self):
         ref = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
@@ -17,7 +16,7 @@ class TestMatrix(unittest.TestCase):
     def test_str0(self):
         M = Matrix(3)
         M[:] = range(3)
-        self.assertEqual(str(M.max()), "    2.00000000")
+        assert str(M.max()) == "    2.00000000"
 
     def test_str1(self):
         M = Matrix((2,))
@@ -29,7 +28,7 @@ class TestMatrix(unittest.TestCase):
        1      1.00000000
        2      1.00000000
 """
-        self.assertEqual(this, ref)
+        assert this == ref
 
     def test_str2a(self):
         M = Matrix((2, 2))
@@ -41,7 +40,7 @@ class TestMatrix(unittest.TestCase):
        1      1.00000000    0.00000000
        2      0.00000000    1.00000000
 """
-        self.assertEqual(this, ref)
+        assert this == ref
 
     def test_str2b(self):
         M = Matrix((6, 6))
@@ -59,7 +58,7 @@ class TestMatrix(unittest.TestCase):
               Column   6
        6      5.00000000
 """
-        self.assertEqual(this, ref)
+        assert this == ref
 
     def test_str3(self):
         M = Matrix((2, 2, 2))
@@ -76,7 +75,7 @@ class TestMatrix(unittest.TestCase):
               Column   1    Column   2
        2      0.00000000    1.00000000
 """
-        self.assertEqual(this, ref)
+        assert this == ref
 
     def test_str4(self):
         M = Matrix((2, 2, 2, 2))
@@ -99,7 +98,7 @@ class TestMatrix(unittest.TestCase):
               Column   1    Column   2
        2      0.00000000    1.00000000
 """
-        self.assertEqual(this, ref)
+        assert this == ref
 
     def test_mul(self):
         M = Matrix((2, 2))
@@ -237,7 +236,7 @@ class TestMatrix(unittest.TestCase):
 
     def test_inv_init_none(self):
         M = init([[2, 1], [1, 2]])
-        self.assertEqual(M._I, None)
+        assert M._I is None
 
     def test_inv(self):
         M = init([[3, 1], [1, -3]])
@@ -246,7 +245,7 @@ class TestMatrix(unittest.TestCase):
 
     def test_det(self):
         M = init([[3, 1], [1, -3]])
-        self.assertAlmostEqual(M.det(), -10)
+        assert M.det() == approx(-10)
 
     def test_minor(self):
         M1 = Matrix((3, 3))
@@ -407,19 +406,19 @@ class TestMatrix(unittest.TestCase):
 
     def test_norm2(self):
         A = init([3, 4])
-        self.assertAlmostEqual(A.norm2(), 5.0)
+        assert A.norm2() == approx(5.0)
 
     def test_block(self):
         A = init([[1, 2], [3, 4]])
         B = A.block([1, 1], [1, 1])
-        self.assertEqual(B.subblock[0], [1])
-        self.assertEqual(B.subblock[1], [4])
+        assert B.subblock[0] == [1]
+        assert B.subblock[1] == [4]
 
     def test_subblocked(self):
         A = init([[1, 2], [3, 4]])
         B = A.subblocked([1, 1], [1, 1])
-        self.assertEqual(B.subblock[0][1], [3])
-        self.assertEqual(B.subblock[1][0], [2])
+        assert B.subblock[0][1] == [3]
+        assert B.subblock[1][0] == [2]
 
     def test_clear(self):
         A = init([[1, 2], [3, 4]])
@@ -452,49 +451,49 @@ class TestMatrix(unittest.TestCase):
         A = init([2.0, 0.0, 0.0])
         B = init([1.0, 0.0, 0.0])
         C = init([1.0, 1.0, 0.0])
-        self.assertAlmostEqual(A.angle3(B, C), pi / 2)
+        assert A.angle3(B, C) == approx(pi / 2)
 
     def test_angle3d(self):
         A = init([2.0, 0.0, 0.0])
         B = init([1.0, 0.0, 0.0])
         C = init([1.0, 1.0, 0.0])
-        self.assertAlmostEqual(A.angle3d(B, C), 90.0)
+        assert A.angle3d(B, C) == approx(90.0)
 
     def test_angle(self):
         A = init([1.0, 0.0, 0.0])
         B = init([1.0, 1.0, 0.0])
-        np.testing.assert_almost_equal(A.angle(B), pi / 4)
+        assert A.angle(B) == approx(pi / 4)
 
     def test_angle2(self):
         A = init([0.1, 0.0, 0.0])
         B = init([-0.1, 0.1, 0.0])
-        np.testing.assert_almost_equal(A.angle(B), 3 * pi / 4)
+        assert A.angle(B) == approx(3 * pi / 4)
 
     def test_angled(self):
         A = init([0, 0, 1])
         B = init([0, 1, 0])
-        np.testing.assert_almost_equal(A.angled(B), 90)
+        assert A.angled(B) == approx(90)
 
     def test_dihedral_open(self):
         A = init([1, 1, 0])
         B = init([1, 0, 0])
         C = init([0, 0, 0])
         D = init([0, -1, 0])
-        np.testing.assert_equal(A.dihedral(B, C, D), pi)
+        assert A.dihedral(B, C, D) == approx(pi)
 
     def test_dihedrald_open(self):
         A = init([1, 1, 0])
         B = init([1, 0, 0])
         C = init([0, 0, 0])
         D = init([0, -1, 0])
-        np.testing.assert_equal(A.dihedrald(B, C, D), 180)
+        assert A.dihedrald(B, C, D) == approx(180)
 
     def test_dihedral_eclipsed(self):
         A = init([1, 1, 0])
         B = init([1, 0, 0])
         C = init([0, 0, 0])
         D = init([0, 1, 0])
-        np.testing.assert_equal(A.dihedral(B, C, D), 0)
+        assert A.dihedral(B, C, D) == approx(0)
 
     def test_svd(self):
         A = init([[1, 1, sqrt(3)], [-1, -1, 0]])

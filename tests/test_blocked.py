@@ -1,16 +1,15 @@
 import math
-import unittest
 from unittest import mock
 
 import numpy
 import pytest
 
-from util.blocked import BlockDiagonalMatrix, unit, triangular
+from util.blocked import BlockDiagonalMatrix, unit, BlockedTriangular
 from util.full import init
 
 
-class TestBlocked(unittest.TestCase):
-    def setUp(self):
+class TestBlocked:
+    def setup(self):
         self.bdm = BlockDiagonalMatrix((2, 1), (2, 1))
 
     def tearDown(self):
@@ -21,24 +20,23 @@ class TestBlocked(unittest.TestCase):
             numpy.testing.assert_allclose(numpy.array(t), r)
 
     def test_rowdim(self):
-        self.assertTupleEqual(self.bdm.nrow, (2, 1))
+        assert self.bdm.nrow == (2, 1)
 
     def test_coldim(self):
-        self.assertTupleEqual(self.bdm.ncol, (2, 1))
+        assert self.bdm.ncol == (2, 1)
 
     def test_row_offset(self):
-        self.assertTupleEqual(self.bdm.irow, (0, 2))
+        assert self.bdm.irow == (0, 2)
 
     def test_col_offset(self):
-        self.assertTupleEqual(self.bdm.icol, (0, 2))
+        assert self.bdm.icol == (0, 2)
 
     def test_incompatible_dim_raises(self):
-        self.assertRaises(AssertionError, BlockDiagonalMatrix, (1, 2), (3,))
+        with pytest.raises(AssertionError):
+            BlockDiagonalMatrix((1, 2), (3,))
 
     def test_str(self):
-        self.assertEqual(
-            str(self.bdm),
-            """
+        assert str(self.bdm) == """
 Block 1
 
  (2, 2)
@@ -48,8 +46,7 @@ Block 2
 
  (1, 1)
               Column   1
-""",
-        )
+"""
 
     def test_repr(self):
         assert repr(self.bdm) == 'BlockDiagonalMatrix((2, 1), (2, 1))'
@@ -62,7 +59,7 @@ Block 2
         numpy.testing.assert_allclose(bdm.subblock[1], self.bdm.subblock[1])
 
     def test_init_from_array_dimension_error(self):
-        with self.assertRaises(AssertionError):
+        with pytest.raises(AssertionError):
             BlockDiagonalMatrix.init_from_array([1, 2, 3], (2, 1), (2, 1))
 
     def test_init_from_array(self):
@@ -176,14 +173,14 @@ Block 2
     @mock.patch.object(numpy.random, "random")
     def test_blocked_random(self, mock_random):
         BlockDiagonalMatrix([2], [2]).random()
-        self.assertTrue(mock_random.calls, 2)
+        assert mock_random.called
 
     def test_tr(self):
         M = BlockDiagonalMatrix([2, 1], [2, 1])
         M.subblock[0][0, 0] = 3
         M.subblock[0][1, 1] = 2
         M.subblock[1][0, 0] = 1
-        self.assertEqual(M.tr(), 6.0)
+        assert M.tr() == 6.0
 
     def test_qr_Q(self):
         A = BlockDiagonalMatrix([3], [3])
@@ -228,18 +225,11 @@ Block 2
         numpy.testing.assert_almost_equal(u[0], u_ref)
 
 
-class BlockedTriangularTest(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
+class TestBlockedTriangular:
 
     def test_str(self):
-        bt = triangular((2, 1))
-        self.assertEqual(
-            str(bt),
-            """
+        bt = BlockedTriangular((2, 1))
+        assert str(bt) == """
 Block 1
 
     0.00000000
@@ -248,11 +238,10 @@ Block 1
 Block 2
 
     0.00000000
-""",
-        )
+"""
 
     def test_init(self):
-        bt = triangular.init([[1.0, 2.0, 3.0], [4.0]])
+        bt = BlockedTriangular.init([[1.0, 2.0, 3.0], [4.0]])
         numpy.testing.assert_almost_equal(
             numpy.array(bt.subblock[0]),
             [1.0, 2.0, 3.0]
@@ -263,11 +252,11 @@ Block 2
 
     @mock.patch.object(numpy.random, "random")
     def test_blocked_random(self, mock_random):
-        triangular([3, 2]).random()
-        self.assertTrue(mock_random.calls, 2)
+        BlockedTriangular([3, 2]).random()
+        assert mock_random.calls
 
     def test_add(self):
-        bt = triangular.init([[1.0, 2.0, 3.0], [4.0]])
+        bt = BlockedTriangular.init([[1.0, 2.0, 3.0], [4.0]])
         bt = bt + bt
         numpy.testing.assert_almost_equal(
             numpy.array(bt.subblock[0]), [2.0, 4.0, 6.0]
@@ -277,7 +266,7 @@ Block 2
         )
 
     def test_sub(self):
-        bt = triangular.init([[1.0, 2.0, 3.0], [4.0]])
+        bt = BlockedTriangular.init([[1.0, 2.0, 3.0], [4.0]])
         bt = bt - bt
         numpy.testing.assert_almost_equal(
             numpy.array(bt.subblock[0]), [0.0, 0.0, 0.0]
@@ -287,13 +276,13 @@ Block 2
         )
 
     def test_unpack(self):
-        bt = triangular.init([[1.0, 2.0, 3.0], [4.0]])
+        bt = BlockedTriangular.init([[1.0, 2.0, 3.0], [4.0]])
         ubt = bt.unpack()
         numpy.testing.assert_almost_equal(ubt.subblock[0], [[1, 2], [2, 3]])
         numpy.testing.assert_almost_equal(ubt.subblock[1], [[4]])
 
     def test_unblock(self):
-        bt = triangular.init([[1.0, 2.0, 3.0], [4.0]])
+        bt = BlockedTriangular.init([[1.0, 2.0, 3.0], [4.0]])
         ubl = bt.unblock()
         numpy.testing.assert_almost_equal(
             numpy.array(ubl), [1.0, 2.0, 3.0, 0.0, 0.0, 4.0]

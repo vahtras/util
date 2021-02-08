@@ -1,24 +1,14 @@
-import unittest
-
 import numpy
-import pytest
 
 from util.subblocked import matrix as SubBlockedMatrix
 
 
-class NewTest(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
+class TestSubBlocked:
 
     def test_str(self):
         asb = SubBlockedMatrix([2, 1], [2, 1])
         print(asb)
-        self.assertEqual(
-            str(asb),
-            """
+        assert str(asb) == """
 Block (1,1)
 
  (2, 2)
@@ -38,8 +28,7 @@ Block (2,2)
 
  (1, 1)
               Column   1
-""",
-        )
+"""
 
     def test_tranpose_diagonal_block(self):
         A = SubBlockedMatrix([2], [2])

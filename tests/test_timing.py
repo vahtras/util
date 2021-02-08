@@ -20,6 +20,6 @@ class TestTiming:
         r0 = timing.timing("dummy")
         info = str(r0)
         assert info == (
-            "Time used in dummy               :" +
+            "Time used in dummy               :"
             "      0.25 (cpu)       0.15 (wall)"
         )
