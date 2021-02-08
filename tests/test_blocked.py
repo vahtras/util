@@ -95,7 +95,7 @@ Block 2
     def test_mul(self):
         self.bdm[0][:, :] = [[0, 1], [2, 3]]
         self.bdm[1][:, :] = [[2]]
-        self.assert_allclose(self.bdm * self.bdm, [[[2, 3], [6, 11]], [[4]]])
+        self.assert_allclose(self.bdm @ self.bdm, [[[2, 3], [6, 11]], [[4]]])
 
     def test_rmul(self):
         self.bdm[0][:, :] = [[0, 1], [2, 3]]
@@ -202,7 +202,7 @@ Block 2
         numpy.testing.assert_almost_equal(
             R, -init([[14, 0, 0], [21, 175, 0], [-14, -70, 35]])
         )
-        numpy.testing.assert_almost_equal(A[0], Q * R)
+        numpy.testing.assert_almost_equal(A[0], Q @ R)
 
     def test_gram_schmidt(self):
         S = BlockDiagonalMatrix([2], [2])

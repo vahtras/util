@@ -153,6 +153,7 @@ class Matrix(numpy.ndarray):
                2      2.00000000    4.00000000
         <BLANKLINE>
         """
+        # return numpy.ndarray.__mul__(self, other)
 
         if isinstance(other, self.__class__) or self.is_sibling(other):
             return numpy.dot(self, other)
@@ -275,7 +276,7 @@ class Matrix(numpy.ndarray):
 
     def __xor__(self, other):
         """Commutator [A, B]"""
-        return self * other - other * self
+        return self @ other - other @ self
 
     def inv(self):
         """Matrix inverse"""
@@ -400,7 +401,7 @@ class Matrix(numpy.ndarray):
         #          (self.T*self).inv()*self.T*new = T (QR?)
         #
         if T:
-            return (new.T * S * self).inv()
+            return (new.T @ S @ self).inv()
         else:
             return new
 
@@ -622,8 +623,8 @@ class Matrix(numpy.ndarray):
         b3 = self - r3
         b2 = r3 - r2
         b1 = r2 - r1
-        b1xb2 = b1.cross() * b2
-        b2xb3 = b2.cross() * b3
+        b1xb2 = b1.cross() @ b2
+        b2xb3 = b2.cross() @ b3
         n2 = b2.norm2()
         return math.atan2(n2 * b1 & b2xb3, b1xb2 & b2xb3)
 
@@ -767,7 +768,7 @@ class Triangular(Matrix):
     def __mul__(self, other):
         """Multiplication of triangular matrices, return square"""
         if isinstance(other, self.__class__):
-            return self.unpack() * other.unpack()
+            return self.unpack() @ other.unpack()
         else:
             return other * self
 

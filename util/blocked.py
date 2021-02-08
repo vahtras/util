@@ -105,13 +105,13 @@ class BlockDiagonalMatrix(object):
             self.subblock[i].random()
         return self
 
-    def __mul__(self, other):
+    def __matmul__(self, other):
         """Multiplication blockwise """
 
         new = BlockDiagonalMatrix(self.nrow, other.ncol)
         for i in range(self.nblocks):
             if self.nrow[i]:
-                new.subblock[i] = self.subblock[i] * other.subblock[i]
+                new.subblock[i] = self.subblock[i] @ other.subblock[i]
         return new
 
     def __rmul__(self, other):
@@ -157,13 +157,10 @@ class BlockDiagonalMatrix(object):
         for i in range(self.nblocks):
             if self.nrow[i]:
                 if isinstance(other, self.__class__):
-                    new.subblock[i] = self.subblock[i] / other.subblock[i]
+                    new.subblock[i] = other.subblock[i].solve(self.subblock[i])
                 else:
                     new.subblock[i] = self.subblock[i] / other
         return new
-
-    def __div__(self, other):
-        return self.__truediv__(other)
 
     def __rtruediv__(self, other):
         """Inversion """

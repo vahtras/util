@@ -103,7 +103,7 @@ class TestMatrix(unittest.TestCase):
         M = Matrix((2, 2))
         M[0, 0] = M[1, 1] = 2.0
         M[0, 1] = M[1, 0] = 1.0
-        np.testing.assert_equal(M * M, [[5, 4], [4, 5]])
+        np.testing.assert_equal(M @ M, [[5, 4], [4, 5]])
 
     def test_mul_scalar_matrix(self):
         M = Matrix((2, 2))
@@ -303,7 +303,7 @@ class TestMatrix(unittest.TestCase):
         np.testing.assert_almost_equal(
             R, -init([[14, 0, 0], [21, 175, 0], [-14, -70, 35]])
         )
-        np.testing.assert_almost_equal(A, Q * R)
+        np.testing.assert_almost_equal(A, Q @ R)
 
     def test_normalize(self):
         v = init([1.0, 1.0])
@@ -334,7 +334,7 @@ class TestMatrix(unittest.TestCase):
         S = init([[1.0, Delta], [Delta, 1.0]])
         v = init([[1.0, 0.0], [0.0, 1.0]])
         T = v.GST(S)
-        u = v * T
+        u = v @ T
         u_ref = init(
             [
                 [1.0, 0.0],
@@ -347,19 +347,19 @@ class TestMatrix(unittest.TestCase):
         Delta = 0.1
         S = init([[1.0, Delta], [Delta, 1.0]])
         Sh = S.sqrt()
-        np.testing.assert_almost_equal(Sh * Sh, S)
+        np.testing.assert_almost_equal(Sh @ Sh, S)
 
     def test_sqrtinv(self):
         Delta = 0.1
         S = init([[1.0, Delta], [Delta, 1.0]])
         Sih = S.invsqrt()
-        np.testing.assert_almost_equal(Sih * Sih, S.I)
+        np.testing.assert_almost_equal(Sih @ Sih, S.I)
 
     def test_funcsqrt(self):
         Delta = 0.1
         S = init([[1.0, Delta], [Delta, 1.0]])
         Sh = S.func(np.sqrt)
-        np.testing.assert_almost_equal(Sh * Sh, S)
+        np.testing.assert_almost_equal(Sh @ Sh, S)
 
     def test_exp(self):
         Delta = 0.1
@@ -501,7 +501,7 @@ class TestMatrix(unittest.TestCase):
     def test_svd(self):
         A = init([[1, 1, sqrt(3)], [-1, -1, 0]])
         u, s, v = A.svd()
-        np.testing.assert_almost_equal(A, u * s * v.T)
+        np.testing.assert_almost_equal(A, u @ s @ v.T)
 
     def test_unit(self):
         identity = init([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
