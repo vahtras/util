@@ -128,62 +128,48 @@ class BlockDiagonalMatrix:
 
     def __add__(self, other):
         """Addition blockwise"""
-
-        new = BlockDiagonalMatrix(self.nrow, self.ncol)
-        for i in range(self.nblocks):
-            if self.nrow[i]:
-                new.subblock[i] = self.subblock[i] + other.subblock[i]
-        return new
+        bdm = BlockDiagonalMatrix(self.nrow, self.ncol)
+        bdm.subblock = [s + o for s, o in zip(self.subblock, other.subblock)]
+        return bdm
 
     def __sub__(self, other):
         """Subtraction blockwize"""
-
-        new = BlockDiagonalMatrix(self.nrow, self.ncol)
-        for i in range(self.nblocks):
-            if self.nrow[i]:
-                new.subblock[i] = self.subblock[i] - other.subblock[i]
-        return new
+        bdm = BlockDiagonalMatrix(self.nrow, self.ncol)
+        bdm.subblock = [s - o for s, o in zip(self.subblock, other.subblock)]
+        return bdm
 
     def __neg__(self):
         """Negation blockwise"""
 
-        new = BlockDiagonalMatrix(self.nrow, self.ncol)
-        for i in range(self.nblocks):
-            if self.nrow[i]:
-                new.subblock[i] = -self.subblock[i]
-        return new
+        bdm = BlockDiagonalMatrix(self.nrow, self.ncol)
+        bdm.subblock = [-b for b in self.subblock]
+        return bdm
 
     def __truediv__(self, other):
         "Scalar division"
 
-        new = BlockDiagonalMatrix(self.nrow, self.ncol)
-        for i in range(self.nblocks):
-            new.subblock[i] = self.subblock[i] * (1 / other)
-        return new
+        bdm = BlockDiagonalMatrix(self.nrow, self.ncol)
+        bdm.subblock = [b * (1/other) for b in self.subblock]
+        return bdm
 
     def __rtruediv__(self, other):
         "Reverse Scalar division"
 
-        new = BlockDiagonalMatrix(self.nrow, self.ncol)
-        for i in range(self.nblocks):
-            new.subblock[i] = other / self.subblock[i]
-        return new
+        bdm = BlockDiagonalMatrix(self.nrow, self.ncol)
+        bdm.subblock = [other / b for b in self.subblock]
+        return bdm
 
     def solve(self, other):
         "Solve linear equations blockwise" ""
 
-        new = BlockDiagonalMatrix(self.nrow, self.ncol)
-        for i in range(self.nblocks):
-            if self.nrow[i]:
-                new.subblock[i] = self.subblock[i].solve(
-                    other.subblock[i]
-                )
-        return new
+        bdm = BlockDiagonalMatrix(self.nrow, self.ncol)
+        bdm.subblock = [s.solve(o) for s, o in zip(self.subblock, other.subblock)]
+        return bdm
 
     def pack(self):
         for i in range(self.nblocks):
             assert self.nrow[i] == self.ncol[i]
-        new = triangular(self.nrow)
+        new = BlockedTriangular(self.nrow)
         for i in range(self.nblocks):
             new.subblock[i] = self.subblock[i].pack()
         return new
@@ -305,7 +291,7 @@ class BlockedTriangular(object):
         self.dim = dim
         self.subblock = []
         for i in range(self.nblocks):
-            self.subblock.append(full.triangular((dim[i], dim[i])))
+            self.subblock.append(full.Triangular((dim[i], dim[i])))
 
     def __str__(self):
         retstr = ""
@@ -319,13 +305,15 @@ class BlockedTriangular(object):
             self.subblock[i].random()
 
     def __add__(self, other):
-        new = triangular(self.dim)
+        bt = BlockedTriangular(self.dim)
+        bt.subblock = [s + o for s, o in zip(self.subblock, other.subblock)]
+        return bt
         for i in range(self.nblocks):
             new.subblock[i] = self.subblock[i] + other.subblock[i]
         return new
 
     def __sub__(self, other):
-        new = triangular(self.dim)
+        new = BlockedTriangular(self.dim)
         for i in range(self.nblocks):
             new.subblock[i] = self.subblock[i] - other.subblock[i]
         return new
@@ -343,10 +331,10 @@ class BlockedTriangular(object):
     def init(blocks):
         from . import full
 
-        triangular_matrices = [full.triangular.init(block) for block in blocks]
-        dimensions = [tmat.dim for tmat in triangular_matrices]
-        new = triangular(dimensions)
-        new.subblock = triangular_matrices
+        BlockedTriangular_matrices = [full.Triangular.init(block) for block in blocks]
+        dimensions = [tmat.dim for tmat in BlockedTriangular_matrices]
+        new = BlockedTriangular(dimensions)
+        new.subblock = BlockedTriangular_matrices
         return new
 
 

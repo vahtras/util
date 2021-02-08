@@ -1,48 +1,45 @@
-import unittest
 import numpy as np
 import numpy.testing as npt
 
 from util.full import Triangular
 
 
-class TestTriangular(unittest.TestCase):
-    def setUp(self):
+class TestTriangular:
+
+    def setup(self):
         self.twodim = Triangular.init([1.0, 2.0, 3.0])
         np.random.seed(0)
         self.antisym = Triangular((2, 2), anti=True)
         self.antisym[1, 0] = 2.0
 
     def test_init_square_shape(self):
-        self.assertEqual(self.twodim.sshape, (2, 2))
+        assert self.twodim.sshape == (2, 2)
 
     def test_init_values(self):
         npt.assert_equal(np.array(self.twodim), [1.0, 2.0, 3.0])
 
     def test_str(self):
-        self.assertEqual(
-            str(self.twodim),
-            """
+        assert str(self.twodim) == """
     1.00000000
     2.00000000    3.00000000
-""",
-        )
+"""
 
     def test_getitem_by_tuple(self):
-        self.assertEqual(self.twodim[0, 0], 1.0)
-        self.assertEqual(self.twodim[1, 0], 2.0)
-        self.assertEqual(self.twodim[0, 1], 2.0)
-        self.assertEqual(self.twodim[1, 1], 3.0)
+        assert self.twodim[0, 0] == 1.0
+        assert self.twodim[1, 0] == 2.0
+        assert self.twodim[0, 1] == 2.0
+        assert self.twodim[1, 1] == 3.0
 
     def test_getitem_by_tuple_as(self):
-        self.assertEqual(self.antisym[0, 0], 0.0)
-        self.assertEqual(self.antisym[1, 0], 2.0)
-        self.assertEqual(self.antisym[0, 1], -2.0)
-        self.assertEqual(self.antisym[1, 1], 0.0)
+        assert self.antisym[0, 0] == 0.0
+        assert self.antisym[1, 0] == 2.0
+        assert self.antisym[0, 1] == -2.0
+        assert self.antisym[1, 1] == 0.0
 
     def test_getitem_by_scalar(self):
-        self.assertEqual(self.twodim[0], 1.0)
-        self.assertEqual(self.twodim[1], 2.0)
-        self.assertEqual(self.twodim[2], 3.0)
+        assert self.twodim[0] == 1.0
+        self.twodim[1] == 2.0
+        self.twodim[2] == 3.0
 
     def test_setitem(self):
         self.twodim[0, 1] = 4.0

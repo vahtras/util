@@ -124,42 +124,6 @@ class Matrix(numpy.ndarray):
             return self.fmt % self.sum()
         return retstr
 
-    def __mul__(self, other):
-        """
-        Matrix multiplication
-        Example:
-        >>> M = matrix((2,2))
-        >>> M[0, 0] = M[1, 1] = 2.0
-        >>> M[0, 1] = M[1, 0] = 1.0
-        >>> print(M*M)
-        <BLANKLINE>
-         (2, 2)
-                      Column   1    Column   2
-               1      5.00000000    4.00000000
-               2      4.00000000    5.00000000
-        <BLANKLINE>
-        >>> print(2*M)
-        <BLANKLINE>
-         (2, 2)
-                      Column   1    Column   2
-               1      4.00000000    2.00000000
-               2      2.00000000    4.00000000
-        <BLANKLINE>
-        >>> print(M*2)
-        <BLANKLINE>
-         (2, 2)
-                      Column   1    Column   2
-               1      4.00000000    2.00000000
-               2      2.00000000    4.00000000
-        <BLANKLINE>
-        """
-        # return numpy.ndarray.__mul__(self, other)
-
-        if isinstance(other, self.__class__) or self.is_sibling(other):
-            return numpy.dot(self, other)
-        else:
-            return other * self
-
     def is_sibling(self, other):
         return self.__class__.__mro__[1] == other.__class__.__mro__[1]
 
@@ -194,29 +158,6 @@ class Matrix(numpy.ndarray):
 
     def solve(self, other):
         return numpy.linalg.solve(self, other)
-
-    def __truediv__to_be_removed(self, other):
-        """Solution of linear equation/inversion
-        Example:
-        >>> A=matrix((2,2)).random(); x=matrix((2,1)).random()
-        >>> b=A*x
-        >>> print(x-b/A)
-        <BLANKLINE>
-         (2, 1)
-                      Column   1
-        <BLANKLINE>
-        """
-
-        raise DeprecationWarning
-
-        if isinstance(other, self.__class__) or self.is_sibling(other):
-            new = numpy.linalg.solve(other, self)
-        else:
-            new = (1.0 / other) * self
-        return new
-
-    def __div__(self, other):
-        return self.__truediv__(other)
 
     def scatteradd(self, other, rows=None, columns=None):
         """ See scatter"""
