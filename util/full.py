@@ -404,11 +404,6 @@ class Matrix(numpy.ndarray):
             taylor_sum += term
         return taylor_sum
 
-    def random(self):
-        """Fill myself with random numbers"""
-        self.flat = numpy.random.random(self.size)
-        return self
-
     def sym(self):
         """return symmetrized matrix"""
         return 0.5 * (self + self.T)
@@ -600,13 +595,22 @@ def unit(n, factor=1):
 
 
 def permute(select, n):
-    """Return permutation matrix based on input"""
+    """
+    Return permutation matrix corresponding to
+    placing a selection of elements in a sequence first and shifting
+    the rest
+
+    >>> np.arange(4) @ permute([0, 2], 4)
+    [0, 2, 1, 3]
+
+    """
+
     complement = list(range(n))
     for i in range(n):
         if i in select:
             complement.remove(i)
     permlist = list(select) + complement
-    new = matrix((n, n))
+    new = Matrix((n, n))
     for i in range(n):
         new[permlist[i], i] = 1
     return new
@@ -713,14 +717,6 @@ class Triangular(Matrix):
         Multiplication of triangular matrices, return square
         """
         return self.unpack() @ other.unpack()
-
-    def random(self):
-        """Triangular random matrix"""
-        matrix.random(self)
-        if self.anti:
-            for i in range(self.sshape[0]):
-                self[i, i] = 0
-        return self
 
 
 # Keep non-standard names for back compatibility

@@ -8,7 +8,6 @@ class TestTriangular:
 
     def setup(self):
         self.twodim = Triangular.init([1.0, 2.0, 3.0])
-        np.random.seed(0)
         self.antisym = Triangular((2, 2), anti=True)
         self.antisym[1, 0] = 2.0
 
@@ -57,8 +56,8 @@ class TestTriangular:
         npt.assert_equal(self.twodim.unpack(), [[1.0, 2.0], [2.0, 3.0]])
 
     def test_unpack_as(self):
-        As = Triangular((2, 2), anti=True)
-        As.random()
+        As = Triangular.init([0, 0.71518937, 0])
+        As.anti = True
         npt.assert_allclose(
             As.unpack(), [[0.0000000, -0.71518937], [0.71518937, 0.00000000]]
         )
@@ -70,16 +69,3 @@ class TestTriangular:
 
     def test_mul_scalar(self):
         npt.assert_equal(np.array(self.twodim * 2), [2.0, 4.0, 6])
-
-    def test_random(self):
-        self.twodim.random()
-        npt.assert_allclose(
-            np.array(self.twodim), [0.5488135, 0.71518937, 0.60276338]
-        )
-
-    def test_random_antisymmetric(self):
-        As = Triangular((2, 2), anti=True)
-        As.random()
-        npt.assert_allclose(
-            np.array(As), [0.0000000, 0.71518937, 0.00000000]
-        )

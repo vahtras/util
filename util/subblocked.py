@@ -136,14 +136,6 @@ class SubBlockedMatrix:
                 new.subblock[i][j] = self.subblock[i][j] - other.subblock[i][j]
         return new
 
-    def random(self):
-        """
-        Fill matrix with random numbers
-        """
-        for i in range(self.rowblocks):
-            for j in range(self.colblocks):
-                self.subblock[i][j].random()
-
     def unblock(self):
         """
         Unblock to full matrix

@@ -84,19 +84,9 @@ Block (2,2)
                     (A - A).subblock[i][j], A2.subblock[i][j]
                 )
 
-    def test_random(self):
-        A = SubBlockedMatrix([2], [2])
-        numpy.random.seed(0)
-        A.random()
-        numpy.testing.assert_allclose(
-            A.subblock[0][0],
-            [[0.5488135, 0.71518937], [0.60276338, 0.54488318]]
-        )
-
     def test_unblock(self):
         A = SubBlockedMatrix([2], [2])
-        numpy.random.seed(0)
-        A.random()
+        A.subblock[0][0][:, :] = [[0.5488135, 0.71518937], [0.60276338, 0.54488318]]
         Afull = A.unblock()
         numpy.testing.assert_allclose(
             Afull,

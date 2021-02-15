@@ -1,4 +1,5 @@
 from math import sqrt, exp, pi
+import pytest
 from pytest import approx
 
 import numpy as np
@@ -512,6 +513,21 @@ class TestMatrix:
         np.testing.assert_equal(
             permute([0, 2], 4),
             [[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]],
+        )
+
+    @pytest.mark.parametrize(
+        'selected, expected',
+        [
+            ([], [0, 1, 2, 3]),
+            ([1], [1, 0, 2, 3]),
+            ([0, 2], [0, 2, 1, 3]),
+            ([1, 2], [1, 2, 0, 3]),
+            ([1, 2, 3], [1, 2, 3, 0]),
+        ]
+    )
+    def test_permuted(self, selected, expected):
+        np.testing.assert_equal(
+            np.arange(4) @ permute(selected, 4), expected
         )
 
     def test_rephase_copy(self):

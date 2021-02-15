@@ -95,19 +95,6 @@ class BlockDiagonalMatrix:
             start += s.size
         return linear
 
-    def random(self):
-        """ Fill matrix subblocks with random numbers
-        Example
-        >>> M = BlockDiagonalMatrix([2], [2]).random()
-        >>> assert M.subblock[0][0,0] < 1 and M.subblock[0][0,0] > 0
-        >>> assert M.subblock[0][1,0] < 1 and M.subblock[0][1,0] > 0
-        >>> assert M.subblock[0][0,1] < 1 and M.subblock[0][0,1] > 0
-        >>> assert M.subblock[0][1,1] < 1 and M.subblock[0][1,1] > 0
-        """
-        for i in range(self.nblocks):
-            self.subblock[i].random()
-        return self
-
     def __matmul__(self, other):
         """Multiplication blockwise """
 
@@ -299,10 +286,6 @@ class BlockedTriangular(object):
             if self.dim[i]:
                 retstr += "\nBlock %d\n" % (i + 1) + str(self.subblock[i])
         return retstr
-
-    def random(self):
-        for i in range(self.nblocks):
-            self.subblock[i].random()
 
     def __add__(self, other):
         bt = BlockedTriangular(self.dim)

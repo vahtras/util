@@ -170,11 +170,6 @@ Block 2
             self.bdm.func(numpy.sqrt), [[[1, 0], [0, 4]], [[5]]]
         )
 
-    @mock.patch.object(numpy.random, "random")
-    def test_blocked_random(self, mock_random):
-        BlockDiagonalMatrix([2], [2]).random()
-        assert mock_random.called
-
     def test_tr(self):
         M = BlockDiagonalMatrix([2, 1], [2, 1])
         M.subblock[0][0, 0] = 3
@@ -249,11 +244,6 @@ Block 2
         numpy.testing.assert_almost_equal(
             numpy.array(bt.subblock[1]), [4.0]
         )
-
-    @mock.patch.object(numpy.random, "random")
-    def test_blocked_random(self, mock_random):
-        BlockedTriangular([3, 2]).random()
-        assert mock_random.calls
 
     def test_add(self):
         bt = BlockedTriangular.init([[1.0, 2.0, 3.0], [4.0]])
