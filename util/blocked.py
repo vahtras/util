@@ -291,9 +291,6 @@ class BlockedTriangular(object):
         bt = BlockedTriangular(self.dim)
         bt.subblock = [s + o for s, o in zip(self.subblock, other.subblock)]
         return bt
-        for i in range(self.nblocks):
-            new.subblock[i] = self.subblock[i] + other.subblock[i]
-        return new
 
     def __sub__(self, other):
         new = BlockedTriangular(self.dim)
