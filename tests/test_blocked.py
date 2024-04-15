@@ -1,5 +1,4 @@
 import math
-from unittest import mock
 
 import numpy
 import pytest
@@ -9,7 +8,7 @@ from util.full import init
 
 
 class TestBlocked:
-    def setup(self):
+    def setup_method(self):
         self.bdm = BlockDiagonalMatrix((2, 1), (2, 1))
 
     def tearDown(self):

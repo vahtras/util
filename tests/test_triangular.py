@@ -6,7 +6,7 @@ from util.full import Triangular
 
 class TestTriangular:
 
-    def setup(self):
+    def setup_method(self):
         self.twodim = Triangular.init([1.0, 2.0, 3.0])
         self.antisym = Triangular((2, 2), anti=True)
         self.antisym[1, 0] = 2.0
